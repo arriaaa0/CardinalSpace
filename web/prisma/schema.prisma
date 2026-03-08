@@ -1,0 +1,227 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  vehicles      Vehicle[]
+  permits       Permit[]
+  violations    Violation[]
+  reservations  Reservation[]
+  payments      Payment[]
+  appeals       Appeal[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Vehicle {
+  id          String   @id @default(cuid())
+  userId      String
+  make        String
+  model       String
+  year        Int
+  color       String
+  licensePlate String  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+  permits      Permit[]
+  violations   Violation[]
+}
+
+model Permit {
+  id          String       @id @default(cuid())
+  userId      String
+  vehicleId   String
+  type        PermitType
+  status      PermitStatus @default(PENDING)
+  startDate   DateTime
+  endDate     DateTime
+  price       Float
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+enum PermitType {
+  STUDENT
+  FACULTY
+  VISITOR
+  DISABLED
+}
+
+enum PermitStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  userId    String
+  vehicleId String?
+  lot       String
+  space     String
+  startDate DateTime
+  endDate   DateTime
+  status    ReservationStatus @default(ACTIVE)
+  qrCode    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+}
+
+enum ReservationStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Violation {
+  id          String   @id @default(cuid())
+  userId      String
+  vehicleId   String?
+  lotId       String
+  spotId      String?
+  type        ViolationType
+  description String
+  fine        Float
+  status      ViolationStatus @default(UNPAID)
+  issuedAt    DateTime @default(now())
+  dueDate     DateTime
+  paidAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
+  appeals Appeal[]
+}
+
+enum ViolationType {
+  NO_PERMIT
+  EXPIRED_PERMIT
+  WRONG_SPOT
+  OVERTIME
+  BLOCKING
+}
+
+enum ViolationStatus {
+  UNPAID
+  PAID
+  APPEALED
+  DISMISSED
+}
+
+model Appeal {
+  id           String       @id @default(cuid())
+  violationId  String
+  userId       String
+  reason       String
+  status       AppealStatus @default(PENDING)
+  adminNotes   String?
+  reviewedAt   DateTime?
+  reviewedBy   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  violation Violation @relation(fields: [violationId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum AppealStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  userId        String
+  amount        Float
+  type          PaymentType
+  status        PaymentStatus  @default(PENDING)
+  stripePaymentId String?     @unique
+  description   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentType {
+  PERMIT
+  VIOLATION
+  RESERVATION
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
