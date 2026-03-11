@@ -11,6 +11,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [adminUser, setAdminUser] = useState<any>(null);
 
   // Allow admin login page without auth
   const isLoginPage = pathname === "/admin/login";
@@ -30,6 +31,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           return;
         }
         setIsAuthenticated(true);
+        setAdminUser(user);
       } catch (error) {
         router.push("/admin/login");
       } finally {
@@ -108,7 +110,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-full bg-rose-100" />
                 <div className="text-xs text-right">
-                  <p className="font-semibold text-slate-900">Admin User</p>
+                  <p className="font-semibold text-slate-900">{adminUser?.name || adminUser?.email || "Admin User"}</p>
                   <p className="text-slate-500">System Administrator</p>
                 </div>
               </div>

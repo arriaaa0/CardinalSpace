@@ -7,10 +7,24 @@ export default function PortalDashboardPage() {
   const [showQR, setShowQR] = useState(false);
   const [activeReservation, setActiveReservation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    fetchUserData();
     fetchActiveReservation();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch("/api/user/me");
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
+  };
 
   const fetchActiveReservation = async () => {
     try {
@@ -37,7 +51,7 @@ export default function PortalDashboardPage() {
               Dashboard
             </p>
             <h1 className="mt-1 text-xl font-semibold">
-              Welcome back, Maria Santos
+              Welcome back, {user?.name || user?.email || "User"}
             </h1>
             <p className="mt-1 text-xs text-rose-100/90">
               View your reservations, parking availability, and notifications.
