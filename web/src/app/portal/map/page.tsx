@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const LOTS = {
   A: {
@@ -37,10 +37,33 @@ const LOTS = {
 export default function PortalMapPage() {
   const [activeLot, setActiveLot] = useState<keyof typeof LOTS>("A");
   const [selectedSpace, setSelectedSpace] = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [lots, setLots] = useState(LOTS);
 
   const lotKey = activeLot as keyof typeof LOTS;
-  const lot = LOTS[lotKey];
+  const lot = lots[lotKey];
   const { rows, cols, available } = lot;
+
+  // Simulate IoT sensor updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLots(prevLots => {
+        const updatedLots = { ...prevLots };
+        Object.keys(updatedLots).forEach(key => {
+          const lotKey = key as keyof typeof LOTS;
+          const lot = updatedLots[lotKey];
+          // Randomly change availability by -2, -1, 0, +1, or +2
+          const change = Math.floor(Math.random() * 5) - 2;
+          const newAvailable = Math.max(0, Math.min(lot.total, lot.available + change));
+          updatedLots[lotKey] = { ...lot, available: newAvailable };
+        });
+        return updatedLots;
+      });
+      setLastUpdate(new Date());
+    }, 10000); // Update every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Generate available spaces
   const totalSpaces = rows * cols;
@@ -77,6 +100,10 @@ export default function PortalMapPage() {
           <p className="mt-1 text-sm text-slate-600">
             Click on a parking space to reserve it
           </p>
+          <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            Live • Updated {Math.floor((Date.now() - lastUpdate.getTime()) / 1000)}s ago
+          </div>
         </div>
         <Link
           href="/portal/reservations"

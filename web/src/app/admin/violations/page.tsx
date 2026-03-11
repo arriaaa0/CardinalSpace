@@ -11,6 +11,12 @@ export default function AdminViolationsPage() {
             status.
           </p>
         </div>
+        <a
+          href="/admin/violations/create"
+          className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700"
+        >
+          Issue Violation
+        </a>
       </header>
 
       <section className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
