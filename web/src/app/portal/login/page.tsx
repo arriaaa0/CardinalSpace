@@ -129,10 +129,6 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
             </button>
 
             <p className="mt-3 text-center text-xs text-slate-600">
-              Demo: Use <strong>test@example.com</strong> / <strong>password</strong>
-            </p>
-
-            <p className="mt-3 text-center text-xs text-slate-600">
               Don&apos;t have an account?{" "}
               <Link
                 href="/portal/signup"

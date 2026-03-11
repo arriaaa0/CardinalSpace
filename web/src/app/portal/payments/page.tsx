@@ -13,26 +13,7 @@ interface PaymentMethod {
 }
 
 export default function PortalPaymentsPage() {
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
-    {
-      id: "1",
-      type: "credit",
-      cardNumber: "4111****1111",
-      cardHolder: "Maria Santos",
-      expiryMonth: "12",
-      expiryYear: "2025",
-      isDefault: true,
-    },
-    {
-      id: "2",
-      type: "debit",
-      cardNumber: "5555****4444",
-      cardHolder: "Maria Santos",
-      expiryMonth: "08",
-      expiryYear: "2026",
-      isDefault: false,
-    },
-  ]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
 
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
