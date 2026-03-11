@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       id: res.id,
       type: "User Activity",
       action: "Parking Reservation Created",
-      description: `User ${res.user.name || res.user.email} created a reservation for ${res.lotId}`,
+      description: `User ${res.user.name || res.user.email} created a reservation for ${res.lot}`,
       user: res.user.email,
       timestamp: new Date(res.createdAt).toLocaleString("en-US", {
         month: "short",

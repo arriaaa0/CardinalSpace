@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       await prisma.permit.update({
         where: { id: existingPermit.id },
         data: { 
-          status: "DENIED"
+          status: "REJECTED"
         }
       })
     } else {
@@ -41,10 +41,12 @@ export async function POST(req: NextRequest) {
       await prisma.permit.create({
         data: {
           userId,
+          vehicleId: "temp", // Will be updated later
           type: "STUDENT",
-          status: "DENIED",
-          validFrom: new Date(),
-          validUntil: new Date()
+          status: "REJECTED",
+          startDate: new Date(),
+          endDate: new Date(),
+          price: 0.0
         }
       })
     }

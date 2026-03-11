@@ -33,8 +33,7 @@ export async function POST(req: NextRequest) {
       await prisma.permit.update({
         where: { id: existingPermit.id },
         data: { 
-          status: "APPROVED",
-          approvedAt: new Date()
+          status: "APPROVED"
         }
       })
     } else {
@@ -42,11 +41,12 @@ export async function POST(req: NextRequest) {
       await prisma.permit.create({
         data: {
           userId,
+          vehicleId: "temp", // Will be updated later
           type: "STUDENT",
           status: "APPROVED",
-          validFrom: new Date(),
-          validUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
-          approvedAt: new Date()
+          startDate: new Date(),
+          endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+          price: 0.0
         }
       })
     }
