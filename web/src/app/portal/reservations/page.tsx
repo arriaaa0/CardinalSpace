@@ -16,21 +16,20 @@ const SPACES = {
   D: Array.from({ length: 64 }, (_, i) => `D-${i + 1}`),
 };
 
-const [vehicles, setVehicles] = useState<any[]>([]);
-const [selectedLot, setSelectedLot] = useState("C");
-const [selectedSpace, setSelectedSpace] = useState("C-15");
-const [startDate, setStartDate] = useState("2026-03-10");
-const [startTime, setStartTime] = useState("10:00");
-const [endDate, setEndDate] = useState("2026-03-10");
-const [endTime, setEndTime] = useState("18:00");
-const [selectedVehicle, setSelectedVehicle] = useState("1");
-const [reservations, setReservations] = useState<any[]>([]);
-const [loading, setLoading] = useState(false);
-const [showQRCode, setShowQRCode] = useState<string | null>(null);
-const [qrData, setQrData] = useState<any>(null);
-
 export default function PortalReservationsPage() {
   const [step, setStep] = useState<"list" | "book" | "payment">("list");
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [selectedLot, setSelectedLot] = useState("C");
+  const [selectedSpace, setSelectedSpace] = useState("C-15");
+  const [startDate, setStartDate] = useState("2026-03-10");
+  const [startTime, setStartTime] = useState("10:00");
+  const [endDate, setEndDate] = useState("2026-03-10");
+  const [endTime, setEndTime] = useState("18:00");
+  const [selectedVehicle, setSelectedVehicle] = useState("");
+  const [reservations, setReservations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showQRCode, setShowQRCode] = useState<string | null>(null);
+  const [qrData, setQrData] = useState<any>(null);
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -55,7 +54,12 @@ export default function PortalReservationsPage() {
       const response = await fetch("/api/user/vehicles");
       if (response.ok) {
         const data = await response.json();
-        setVehicles(data.vehicles || []);
+        const vehicles = data.vehicles || [];
+        setVehicles(vehicles);
+        // Set first vehicle as default if none selected
+        if (vehicles.length > 0 && !selectedVehicle) {
+          setSelectedVehicle(vehicles[0].id);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch vehicles:", error);
