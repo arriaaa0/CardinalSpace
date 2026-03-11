@@ -55,10 +55,10 @@ export default function AdminDashboardPage() {
       const appeals = await appealsRes.json().catch(() => ({ appeals: [] }))
       const reservations = await reservationsRes.json().catch(() => ({ reservations: [] }))
 
-      const activities = []
+      const activities: any[] = []
 
       // Add permit activities
-      permits.applications?.slice(0, 2).forEach(permit => {
+      permits.applications?.slice(0, 2).forEach((permit: any) => {
         activities.push({
           name: permit.name,
           action: `Permit ${permit.status.toLowerCase()}`,
@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
       })
 
       // Add violation activities
-      violations.violations?.slice(0, 2).forEach(violation => {
+      violations.violations?.slice(0, 2).forEach((violation: any) => {
         activities.push({
           name: violation.user?.name || 'Unknown',
           action: `Violation issued: ${violation.type}`,
@@ -78,7 +78,7 @@ export default function AdminDashboardPage() {
       })
 
       // Add appeal activities
-      appeals.appeals?.slice(0, 2).forEach(appeal => {
+      appeals.appeals?.slice(0, 2).forEach((appeal: any) => {
         activities.push({
           name: appeal.user?.name || 'Unknown',
           action: `Appeal ${appeal.status.toLowerCase()}`,
@@ -88,7 +88,7 @@ export default function AdminDashboardPage() {
       })
 
       // Add reservation activities
-      reservations.reservations?.slice(0, 2).forEach(reservation => {
+      reservations.reservations?.slice(0, 2).forEach((reservation: any) => {
         activities.push({
           name: `User ${reservation.userId}`,
           action: `Reservation for ${reservation.lot}`,
