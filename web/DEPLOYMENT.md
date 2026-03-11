@@ -48,12 +48,12 @@ After initial setup, you can log in with:
 
 **Admin Portal:**
 - Email: `admin@example.com`
-- Password: `admin123`
+- Password: `CardinalAdmin2024!`
 - Access: `http://localhost:3000/admin/login`
 
 **User Portal:**
 - Email: `user@example.com`
-- Password: `user123`
+- Password: `CardinalUser2024!`
 - Access: `http://localhost:3000/portal/login`
 
 ### 3. Environment Configuration

@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma migrate deploy && prisma db seed && next build",
+    "build": "prisma generate && next build",
     "postinstall": "prisma generate",
     "start": "next start -p 3000",
     "prod": "npm run build && npm start",
     "lint": "eslint",
     "seed": "tsx prisma/seed.ts",
-    "setup": "prisma migrate deploy && prisma db seed"
+    "setup": "prisma migrate deploy && prisma db seed",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
