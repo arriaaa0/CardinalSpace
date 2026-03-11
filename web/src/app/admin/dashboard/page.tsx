@@ -1,32 +1,51 @@
+"use client"
+
+import { useState, useEffect } from "react"
+
 export default function AdminDashboardPage() {
+  const [stats, setStats] = useState({
+    totalPermits: 0,
+    activeReservations: 0,
+    pendingReviews: 0,
+    violations: 0
+  })
+
+  useEffect(() => {
+    // Fetch real dashboard stats
+    fetch("/api/admin/dashboard/stats")
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(console.error)
+  }, [])
+
   return (
     <div className="space-y-6">
       {/* KPI cards row */}
       <div className="grid gap-4 md:grid-cols-4">
         <KpiCard
           label="Total Permits"
-          value="1,247"
+          value={stats.totalPermits.toString()}
           trend="+12%"
           trendColor="text-emerald-600"
           iconBg="bg-sky-100"
         />
         <KpiCard
           label="Active Reservations"
-          value="89"
+          value={stats.activeReservations.toString()}
           trend="+5%"
           trendColor="text-emerald-600"
           iconBg="bg-emerald-100"
         />
         <KpiCard
           label="Pending Reviews"
-          value="23"
+          value={stats.pendingReviews.toString()}
           trend="-8%"
           trendColor="text-amber-600"
           iconBg="bg-amber-100"
         />
         <KpiCard
           label="Violations"
-          value="7"
+          value={stats.violations.toString()}
           trend="-15%"
           trendColor="text-rose-600"
           iconBg="bg-rose-100"
