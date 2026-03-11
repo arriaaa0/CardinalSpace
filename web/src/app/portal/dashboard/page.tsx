@@ -162,7 +162,7 @@ export default function PortalDashboardPage() {
         <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <header className="mb-3 flex items-center justify-between text-xs">
             <p className="font-semibold text-slate-900">Notifications</p>
-            <Link href="#" className="text-[11px] font-semibold text-rose-700 hover:text-rose-800">
+            <Link href="/portal/notifications" className="text-[11px] font-semibold text-rose-700 hover:text-rose-800">
               View All
             </Link>
           </header>

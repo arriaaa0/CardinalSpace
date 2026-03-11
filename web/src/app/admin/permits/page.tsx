@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function AdminPermitsPage() {
+  const router = useRouter()
   const [applications, setApplications] = useState<any[]>([])
   const [filter, setFilter] = useState("All")
   const [isLoading, setIsLoading] = useState(true)
@@ -173,7 +176,14 @@ export default function AdminPermitsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-[11px] text-slate-500">—</span>
+                        <div className="inline-flex gap-1">
+                          <button 
+                            onClick={() => router.push(`/admin/permits/${app.userId}`)}
+                            className="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                          >
+                            View Details
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>

@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function AdminViolationsPage() {
+  const router = useRouter()
   const [violations, setViolations] = useState<any[]>([])
   const [filter, setFilter] = useState("All")
   const [isLoading, setIsLoading] = useState(true)
@@ -120,7 +122,10 @@ export default function AdminViolationsPage() {
                       <StatusPill status={v.status} />
                     </td>
                     <td className="rounded-r-xl bg-slate-50 px-3 py-2 text-right">
-                      <button className="rounded-full border border-rose-200 px-3 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-50">
+                      <button 
+                        onClick={() => router.push(`/admin/violations/${v.id}`)}
+                        className="rounded-full border border-rose-200 px-3 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-50"
+                      >
                         View Details
                       </button>
                     </td>
