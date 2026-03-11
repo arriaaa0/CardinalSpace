@@ -1,10 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function PortalDashboardPage() {
   const [showQR, setShowQR] = useState(false);
+  const [activeReservation, setActiveReservation] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchActiveReservation();
+  }, []);
+
+  const fetchActiveReservation = async () => {
+    try {
+      const response = await fetch("/api/reservations");
+      if (response.ok) {
+        const reservations = await response.json();
+        const active = reservations.find((r: any) => r.status === "active");
+        setActiveReservation(active);
+      }
+    } catch (error) {
+      console.error("Failed to fetch reservations:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen space-y-6 bg-slate-50">
@@ -38,23 +59,42 @@ export default function PortalDashboardPage() {
           <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
             <header className="mb-3 flex items-center justify-between text-xs">
               <p className="font-semibold text-slate-900">Active Booking</p>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-                Active
-              </span>
+              {activeReservation && (
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                  Active
+                </span>
+              )}
             </header>
-            <div className="space-y-1 text-xs text-slate-600">
-              <p className="font-semibold text-slate-800">
-                Lot C - Basement 1 • Space C-15
-              </p>
-              <p>March 10, 2026 • 8:00 AM – 5:00 PM</p>
-              <p>Vehicle • ABC 1234</p>
-            </div>
-            <button 
-              onClick={() => setShowQR(true)}
-              className="mt-4 inline-flex rounded-full bg-rose-800 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-rose-900"
-            >
-              View QR Code
-            </button>
+            {isLoading ? (
+              <div className="py-4 text-center">
+                <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-rose-900"></div>
+              </div>
+            ) : activeReservation ? (
+              <>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <p className="font-semibold text-slate-800">
+                    {activeReservation.lot} • Space {activeReservation.space}
+                  </p>
+                  <p>{activeReservation.startDate}</p>
+                </div>
+                <button 
+                  onClick={() => setShowQR(true)}
+                  className="mt-4 inline-flex rounded-full bg-rose-800 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-rose-900"
+                >
+                  View QR Code
+                </button>
+              </>
+            ) : (
+              <div className="py-4 text-center">
+                <p className="text-xs text-slate-500 mb-3">No active reservations</p>
+                <Link 
+                  href="/portal/reservations"
+                  className="inline-flex rounded-full bg-rose-800 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-rose-900"
+                >
+                  Reserve Parking
+                </Link>
+              </div>
+            )}
           </section>
 
           {/* Parking availability list */}

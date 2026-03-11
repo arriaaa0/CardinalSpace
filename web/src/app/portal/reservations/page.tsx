@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const LOTS = [
   { id: "A", name: "Lot A - Ground Floor", available: 24, total: 100, hourlyRate: 40 },
@@ -30,19 +30,24 @@ export default function PortalReservationsPage() {
   const [endDate, setEndDate] = useState("2026-03-10");
   const [endTime, setEndTime] = useState("18:00");
   const [selectedVehicle, setSelectedVehicle] = useState("1");
-  const [reservations, setReservations] = useState([
-    {
-      id: "RES001",
-      lot: "Lot C",
-      space: "C-15",
-      startDate: "2026-03-10",
-      startTime: "08:00",
-      endDate: "2026-03-10",
-      endTime: "17:00",
-      status: "active",
-    },
-  ]);
+  const [reservations, setReservations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      const response = await fetch("/api/reservations");
+      if (response.ok) {
+        const data = await response.json();
+        setReservations(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch reservations:", error);
+    }
+  };
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -74,8 +79,9 @@ export default function PortalReservationsPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setReservations([...reservations, data]);
-        setStep("payment");
+        await fetchReservations();
+        setStep("list");
+        alert("Reservation created successfully!");
       } else {
         alert(`Failed: ${data.error || "Unknown error"}`);
       }
@@ -349,10 +355,10 @@ export default function PortalReservationsPage() {
               </div>
               <div className="space-y-2 mb-4 text-sm text-slate-600">
                 <p>
-                  <span className="font-semibold">Date:</span> {res.startDate}
+                  <span className="font-semibold">Start:</span> {res.startDate}
                 </p>
                 <p>
-                  <span className="font-semibold">Time:</span> {res.startTime} - {res.endTime}
+                  <span className="font-semibold">End:</span> {res.endDate}
                 </p>
               </div>
               <button
