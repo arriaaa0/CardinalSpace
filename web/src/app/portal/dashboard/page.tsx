@@ -8,11 +8,39 @@ export default function PortalDashboardPage() {
   const [activeReservation, setActiveReservation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
     fetchUserData();
     fetchActiveReservation();
+    fetchNotifications();
   }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch("/api/user/notifications");
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data.notifications || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    }
+  };
+
+  const formatTime = (timeString: string) => {
+    const time = new Date(timeString);
+    const now = new Date();
+    const diffMs = now.getTime() - time.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hr ago`;
+    return `${diffDays} day ago`;
+  };
 
   const fetchUserData = async () => {
     try {
@@ -139,18 +167,18 @@ export default function PortalDashboardPage() {
             </Link>
           </header>
           <div className="space-y-3 text-xs">
-            <NotificationRow
-              title="Your parking permit has been approved"
-              time="2 hrs ago"
-            />
-            <NotificationRow
-              title="Reservation ending in 30 minutes"
-              time="1 hr ago"
-            />
-            <NotificationRow
-              title="New parking lot available in Basement 2"
-              time="1 day ago"
-            />
+            {notifications.length === 0 ? (
+              <p className="text-slate-500 text-center py-4">No notifications</p>
+            ) : (
+              notifications.slice(0, 3).map((notification) => (
+                <NotificationRow
+                  key={notification.id}
+                  title={notification.title}
+                  time={formatTime(notification.time)}
+                  type={notification.type}
+                />
+              ))
+            )}
           </div>
         </section>
       </div>
@@ -232,16 +260,23 @@ function AvailabilityRow({ lot, percent }: { lot: string; percent: number }) {
   );
 }
 
-function NotificationRow({ title, time }: { title: string; time: string }) {
+function NotificationRow({ title, time, type }: { title: string; time: string; type?: string }) {
+  const getDotColor = () => {
+    switch (type) {
+      case "success": return "bg-emerald-100";
+      case "error": return "bg-rose-100";
+      case "warning": return "bg-amber-100";
+      default: return "bg-slate-100";
+    }
+  };
+
   return (
     <div className="flex items-start gap-3">
-      <div className="mt-1 h-6 w-6 rounded-full bg-emerald-100" />
+      <div className={`mt-1 h-6 w-6 rounded-full ${getDotColor()}`} />
       <div className="flex-1">
-        <p className="text-xs font-semibold text-slate-800">{title}</p>
-        <p className="text-[11px] text-slate-500">{time}</p>
+        <p className="font-semibold text-slate-800">{title}</p>
+        <p className="text-[11px] text-slate-500">{formatTime(time)}</p>
       </div>
     </div>
   );
 }
-
-
