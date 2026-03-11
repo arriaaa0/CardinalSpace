@@ -53,7 +53,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-200 border-t-rose-600 mx-auto"></div>
           <p className="mt-2 text-sm text-slate-600">Loading...</p>

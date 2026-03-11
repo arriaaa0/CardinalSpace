@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-100">
+      <div className="flex items-center justify-center min-h-screen bg-white">
         <div className="text-center">
           <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-rose-200 border-t-rose-900 mx-auto"></div>
           <p className="text-slate-600">Loading...</p>

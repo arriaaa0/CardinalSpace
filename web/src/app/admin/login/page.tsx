@@ -34,6 +34,7 @@ export default function AdminLoginPage() {
           setError("You do not have admin access")
           return
         }
+        router.refresh()
         router.push("/admin/dashboard")
       }
     } catch (err) {

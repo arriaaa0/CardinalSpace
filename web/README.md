@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+﻿# Cardinal Space - Parking Management System
+
+A production-ready parking reservation and management system built with Next.js, React, TypeScript, and Prisma.
+
+## Tech Stack
+
+- **Framework:** Next.js 16.1.6 (Turbopack)
+- **Runtime:** React 19.2.3
+- **Language:** TypeScript 5
+- **Database:** SQLite with Prisma v6 ORM
+- **Styling:** Tailwind CSS v4
+- **Auth:** Custom JWT with HTTP-only cookies
+- **Validation:** Zod
+
+## Features
+
+✅ User authentication (login/signup with bcrypt)
+✅ Role-based access (ADMIN/USER)
+✅ Interactive parking lot map with space selection
+✅ Three-step reservation workflow
+✅ Time pickers with duration auto-calculation
+✅ Hourly pricing system (₱/hour per lot)
+✅ Payment method selection UI
+✅ User settings/profile management
+✅ Responsive mobile-first design
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install Dependencies
 
-```bash
+``ash
+npm install
+``
+
+### 2. Set Up Environment Variables
+
+Copy .env.example to .env.local and fill in your values:
+
+``ash
+cp .env.example .env.local
+``
+
+Then edit .env.local:
+``
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="your-secret-here"  # Generate: openssl rand -base64 32
+NEXTAUTH_URL="http://localhost:3001"
+``
+
+### 3. Initialize Database
+
+Run Prisma migrations to set up your local database:
+
+``ash
+npx prisma migrate dev
+``
+
+### 4. Start Development Server
+
+``ash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+``
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Login with Test Credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Admin:** admin@example.com / admin123
+- **User:** user@example.com / user123
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+``
+web/
+├── src/
+│   ├── app/
+│   │   ├── admin/          # Admin dashboard (role-protected)
+│   │   ├── portal/         # User portal
+│   │   │   ├── dashboard/  # User home
+│   │   │   ├── map/        # Interactive parking lot
+│   │   │   ├── reservations/ # Booking system
+│   │   │   └── settings/   # Profile & preferences
+│   │   └── api/            # API routes
+│   ├── lib/                # Auth utilities & shared code
+│   └── prisma/             # Database schema & migrations
+``
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- / - Landing page
+- /portal/login - User login
+- /portal/signup - User registration
+- /portal/dashboard - User home with quick actions
+- /portal/map - Interactive parking lot browser
+- /portal/reservations - Booking & payment
+- /portal/settings - Profile & account settings
+- /admin/dashboard - Admin analytics
+- /admin/permits - Permit management
+- /admin/violations - Violation tracking
 
-## Deploy on Vercel
+## Development Commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+``ash
+npm run dev          # Start dev server
+npm run build        # Build for production
+npm run start        # Run production server
+npm run lint         # Run ESLint
+npx prisma studio   # Open Prisma database GUI
+npx prisma migrate dev  # Create new migration
+``
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Database
+
+This project uses SQLite with Prisma. To view/edit your database:
+
+``ash
+npx prisma studio
+``
+
+## Contributing
+
+1. Create a feature branch: git checkout -b feature/your-feature
+2. Commit changes: git commit -am "Add feature"
+3. Push to branch: git push origin feature/your-feature
+4. Create a pull request
+
+## Notes for Collaborators
+
+- Each developer should have their own dev.db (generated locally via 
+px prisma migrate dev)
+- Never commit .env.local or *.db files
+- The Prisma schema is in /prisma/schema.prisma
+- All API routes require JWT authentication (check /src/lib/auth-actions.ts)
+- User portal uses rose theme, admin uses amber theme

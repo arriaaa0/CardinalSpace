@@ -1,22 +1,235 @@
-export default function PortalViolationsPage() {
-  return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Violations & appeals
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Placeholder list and detail view for user violations, evidence, and
-          appeals (TC62–TC75).
-        </p>
-      </header>
+"use client";
 
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-        Here we&apos;ll mirror your mobile violations experience: notifications,
-        violation list with status, detail view with photo evidence, submit
-        appeal form, and appeal status tracking. For now, it&apos;s a simple
-        stub page so routing works.
+import { useState } from "react";
+
+interface Violation {
+  id: string;
+  date: string;
+  time: string;
+  lot: string;
+  type: string;
+  amount: number;
+  status: "unpaid" | "paid" | "appealed";
+  description: string;
+}
+
+interface Appeal {
+  id: string;
+  violationId: string;
+  reason: string;
+  evidence: string;
+  status: "pending" | "approved" | "denied";
+}
+
+export default function PortalViolationsPage() {
+  const [violations, setViolations] = useState<Violation[]>([
+    {
+      id: "V001",
+      date: "2026-03-08",
+      time: "14:30",
+      lot: "Lot A - Ground Floor",
+      type: "Overstayed",
+      amount: 1500,
+      status: "unpaid",
+      description: "Exceeded reserved time by 45 minutes",
+    },
+    {
+      id: "V002",
+      date: "2026-03-05",
+      time: "10:15",
+      lot: "Lot C - Basement 1",
+      type: "Invalid Permit",
+      amount: 2000,
+      status: "paid",
+      description: "Parking in employee-only zone",
+    },
+  ]);
+
+  const [appeals, setAppeals] = useState<Appeal[]>([
+    {
+      id: "A001",
+      violationId: "V002",
+      reason: "I had valid permit on that day",
+      evidence: "Permit documentation attached",
+      status: "pending",
+    },
+  ]);
+
+  const [showAppealForm, setShowAppealForm] = useState(false);
+  const [selectedViolation, setSelectedViolation] = useState<string | null>(null);
+  const [appealData, setAppealData] = useState({
+    reason: "",
+    evidence: "",
+  });
+
+  const handleSubmitAppeal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedViolation && appealData.reason) {
+      setAppeals([
+        ...appeals,
+        {
+          id: `A${appeals.length + 1}`,
+          violationId: selectedViolation,
+          reason: appealData.reason,
+          evidence: appealData.evidence,
+          status: "pending",
+        },
+      ]);
+      setAppealData({ reason: "", evidence: "" });
+      setShowAppealForm(false);
+      setSelectedViolation(null);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    if (status === "unpaid") return "bg-rose-100 text-rose-700";
+    if (status === "paid") return "bg-emerald-100 text-emerald-700";
+    return "bg-amber-100 text-amber-700";
+  };
+
+  const getAppealStatusColor = (status: string) => {
+    if (status === "pending") return "bg-amber-100 text-amber-700";
+    if (status === "approved") return "bg-emerald-100 text-emerald-700";
+    return "bg-rose-100 text-rose-700";
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-900">Violations & Appeals</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          View your violations, appeal status, and manage payments
+        </p>
       </div>
+
+      {/* Violations Section */}
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">Violations</h2>
+        <div className="space-y-3">
+          {violations.length === 0 ? (
+            <p className="text-sm text-slate-600">No violations recorded.</p>
+          ) : (
+            violations.map((v) => {
+              const hasAppeal = appeals.some((a) => a.violationId === v.id);
+              return (
+                <div
+                  key={v.id}
+                  className="flex items-start justify-between rounded-lg border border-slate-200 p-4"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor(v.status)}`}>
+                        {v.status.toUpperCase()}
+                      </span>
+                      <p className="font-semibold text-slate-900">{v.type}</p>
+                    </div>
+                    <p className="text-sm text-slate-600">{v.date} at {v.time}</p>
+                    <p className="text-sm text-slate-600">{v.lot}</p>
+                    <p className="text-sm text-slate-600">{v.description}</p>
+                  </div>
+                  <div className="text-right ml-4">
+                    <p className="font-semibold text-slate-900">₱{v.amount}</p>
+                    {!hasAppeal && v.status === "unpaid" && (
+                      <button
+                        onClick={() => {
+                          setSelectedViolation(v.id);
+                          setShowAppealForm(true);
+                        }}
+                        className="mt-2 text-sm text-rose-600 hover:text-rose-800 font-semibold"
+                      >
+                        Appeal
+                      </button>
+                    )}
+                    {v.status === "paid" && (
+                      <span className="text-xs text-emerald-600 font-semibold mt-2 block">Paid</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      {/* Appeals Section */}
+      {appeals.length > 0 && (
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Appeals</h2>
+          <div className="space-y-3">
+            {appeals.map((a) => (
+              <div key={a.id} className="rounded-lg border border-slate-200 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-semibold text-slate-900">Appeal for Violation {a.violationId}</p>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getAppealStatusColor(a.status)}`}>
+                    {a.status.toUpperCase()}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-600 mb-2">Reason: {a.reason}</p>
+                {a.evidence && <p className="text-sm text-slate-600">Evidence: {a.evidence}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Appeal Form */}
+      {showAppealForm && (
+        <section className="rounded-2xl bg-rose-50 p-6 border-2 border-rose-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-900">Submit Appeal</h2>
+            <button
+              onClick={() => {
+                setShowAppealForm(false);
+                setSelectedViolation(null);
+              }}
+              className="text-slate-500 hover:text-slate-700 text-2xl"
+            >
+              ✕
+            </button>
+          </div>
+          <form onSubmit={handleSubmitAppeal} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700">Reason for Appeal</label>
+              <textarea
+                value={appealData.reason}
+                onChange={(e) => setAppealData({ ...appealData, reason: e.target.value })}
+                placeholder="Explain why you believe this violation is incorrect..."
+                required
+                rows={4}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700">Supporting Evidence</label>
+              <input
+                type="text"
+                value={appealData.evidence}
+                onChange={(e) => setAppealData({ ...appealData, evidence: e.target.value })}
+                placeholder="e.g., Receipt, photo, permit number, etc."
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                className="flex-1 rounded-full bg-rose-800 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-900"
+              >
+                Submit Appeal
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAppealForm(false);
+                  setSelectedViolation(null);
+                }}
+                className="flex-1 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
     </div>
   );
 }
