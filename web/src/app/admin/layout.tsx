@@ -131,7 +131,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="mt-4 mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <p className="mt-4 mb-1 text-xs font-semibold uppercase tracking-wide text-white">
       {label}
     </p>
   );
@@ -141,7 +141,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="flex items-center rounded-lg px-2 py-1.5 text-slate-200 hover:bg-slate-800 hover:text-amber-300"
+      className="flex items-center rounded-lg px-2 py-1.5 text-white hover:bg-white/10 hover:text-white"
     >
       {label}
     </Link>

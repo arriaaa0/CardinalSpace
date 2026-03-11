@@ -128,7 +128,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="mt-4 mb-1 text-xs font-semibold uppercase tracking-wide text-rose-200">
+    <p className="mt-4 mb-1 text-xs font-semibold uppercase tracking-wide text-white">
       {label}
     </p>
   );
