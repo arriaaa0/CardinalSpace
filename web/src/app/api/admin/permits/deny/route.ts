@@ -23,6 +23,16 @@ export async function POST(req: NextRequest) {
 
     const { userId, reason } = await req.json()
 
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { vehicles: true }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
+
     // Check if permit already exists
     const existingPermit = await prisma.permit.findFirst({
       where: { userId }
@@ -37,11 +47,18 @@ export async function POST(req: NextRequest) {
         }
       })
     } else {
+      // Find user's vehicle
+      const userVehicle = user.vehicles[0]
+      
+      if (!userVehicle) {
+        return NextResponse.json({ error: "User has no registered vehicle" }, { status: 400 })
+      }
+
       // Create denied permit record
       await prisma.permit.create({
         data: {
           userId,
-          vehicleId: "temp", // Will be updated later
+          vehicleId: userVehicle.id,
           type: "STUDENT",
           status: "REJECTED",
           startDate: new Date(),
