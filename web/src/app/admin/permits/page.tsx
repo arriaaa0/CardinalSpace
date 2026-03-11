@@ -34,10 +34,17 @@ export default function AdminPermitsPage() {
       })
       
       if (response.ok) {
+        const result = await response.json()
+        console.log("Permit approved:", result)
         fetchApplications()
+      } else {
+        const error = await response.json()
+        console.error("Approve failed:", error.error)
+        alert("Failed to approve permit: " + error.error)
       }
     } catch (error) {
       console.error("Failed to approve:", error)
+      alert("Failed to approve permit")
     }
   }
 
@@ -50,10 +57,17 @@ export default function AdminPermitsPage() {
       })
       
       if (response.ok) {
+        const result = await response.json()
+        console.log("Permit denied:", result)
         fetchApplications()
+      } else {
+        const error = await response.json()
+        console.error("Deny failed:", error.error)
+        alert("Failed to deny permit: " + error.error)
       }
     } catch (error) {
       console.error("Failed to deny:", error)
+      alert("Failed to deny permit")
     }
   }
 

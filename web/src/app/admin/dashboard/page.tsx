@@ -9,13 +9,30 @@ export default function AdminDashboardPage() {
     pendingReviews: 0,
     violations: 0
   })
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Fetch real dashboard stats
     fetch("/api/admin/dashboard/stats")
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(console.error)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch stats')
+        }
+        return res.json()
+      })
+      .then(data => {
+        if (data.error) {
+          throw new Error(data.error)
+        }
+        setStats(data)
+      })
+      .catch(error => {
+        console.error("Failed to fetch dashboard stats:", error)
+        // Keep default values on error
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [])
 
   return (
