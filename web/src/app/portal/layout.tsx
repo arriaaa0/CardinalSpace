@@ -70,9 +70,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen bg-slate-50">
       <aside className="hidden w-64 flex-shrink-0 border-r border-slate-200 bg-white/90 px-4 py-6 md:block">
         <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">
-            CARdinalSpace
-          </p>
+          <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto mb-2" />
           <p className="mt-1 text-sm font-medium text-slate-900">
             User Portal
           </p>

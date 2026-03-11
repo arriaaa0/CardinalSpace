@@ -66,16 +66,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen bg-slate-100">
       {/* Left sidebar */}
       <aside className="hidden w-64 flex-shrink-0 bg-rose-900 px-4 py-6 text-slate-50 md:flex md:flex-col">
-        <div className="mb-8 flex items-center gap-3 px-1">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/30">
-            <span className="text-base font-semibold text-white">C</span>
-          </div>
+        <div className="mb-8 px-1">
+          <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto" />
         </div>
 
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-100/80">
           Admin Portal
         </p>
-        <p className="px-1 text-sm text-rose-50/90">CardinalSpace</p>
 
         <nav className="mt-6 flex-1 space-y-1 text-sm text-rose-50/90">
           <NavLink href="/admin/dashboard" label="Dashboard" />

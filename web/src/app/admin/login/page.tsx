@@ -46,15 +46,10 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      {/* Top amber gradient header with logo */}
-      <div className="flex h-48 items-center justify-center bg-gradient-to-b from-amber-900 via-amber-800 to-amber-700 px-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/30">
-            <span className="text-lg font-semibold text-white">C</span>
-          </div>
-          <span className="text-2xl font-semibold tracking-wide text-white">
-            CARdinalSpace
-          </span>
+      {/* Top header with logo */}
+      <div className="flex h-48 items-center justify-center bg-gradient-to-b from-rose-900 via-rose-800 to-rose-700 px-4">
+        <div className="w-80">
+          <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto" />
         </div>
       </div>
 

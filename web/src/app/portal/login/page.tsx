@@ -42,15 +42,10 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      {/* Top cardinal gradient header with logo */}
+      {/* Top header with logo */}
       <div className="flex h-44 items-center justify-center bg-gradient-to-b from-rose-900 via-rose-800 to-rose-700 px-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/30">
-            <span className="text-base font-semibold text-white">C</span>
-          </div>
-          <span className="text-2xl font-semibold tracking-wide text-white">
-            CARdinalSpace
-          </span>
+        <div className="w-80">
+          <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto" />
         </div>
       </div>
 
