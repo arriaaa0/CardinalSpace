@@ -242,19 +242,23 @@ export default function AdminAnalyticsPage() {
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">7-Day Activity Summary</h2>
           <div className="space-y-3">
-            {analytics.recentActivity?.slice(0, 7).map((activity: any, index: number) => (
-              <div key={index} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${
-                    activity.type === 'permits' ? 'bg-emerald-500' :
-                    activity.type === 'violations' ? 'bg-rose-500' :
-                    'bg-amber-500'
-                  }`} />
-                  <span className="font-medium text-slate-700 capitalize">{activity.type}</span>
+            {analytics.recentActivity && analytics.recentActivity.length > 0 ? (
+              analytics.recentActivity.slice(0, 7).map((activity: any, index: number) => (
+                <div key={index} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${
+                      activity.type === 'permits' ? 'bg-emerald-500' :
+                      activity.type === 'violations' ? 'bg-rose-500' :
+                      'bg-amber-500'
+                    }`} />
+                    <span className="font-medium text-slate-700 capitalize">{activity.type}</span>
+                  </div>
+                  <span className="text-slate-600">{activity.count} on {new Date(activity.date).toLocaleDateString()}</span>
                 </div>
-                <span className="text-slate-600">{activity.count} on {new Date(activity.date).toLocaleDateString()}</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-slate-500 text-center py-4">No recent activity data available</p>
+            )}
           </div>
         </div>
       </div>
@@ -263,34 +267,38 @@ export default function AdminAnalyticsPage() {
       <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Monthly Trends (Last 6 Months)</h2>
         <div className="space-y-4">
-          {analytics.monthlyData?.slice(0, 6).map((month: any, index: number) => (
-            <div key={index}>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span className="font-medium text-slate-700">
-                  {new Date(month.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                </span>
-                <div className="flex gap-4 text-slate-600">
-                  <span>Violations: {month.violations}</span>
-                  <span>Permits: {month.permits}</span>
-                  <span>Reservations: {month.reservations}</span>
+          {analytics.monthlyData && analytics.monthlyData.length > 0 ? (
+            analytics.monthlyData.slice(0, 6).map((month: any, index: number) => (
+              <div key={index}>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="font-medium text-slate-700">
+                    {new Date(month.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  </span>
+                  <div className="flex gap-4 text-slate-600">
+                    <span>Violations: {month.violations}</span>
+                    <span>Permits: {month.permits}</span>
+                    <span>Reservations: {month.reservations}</span>
+                  </div>
+                </div>
+                <div className="flex gap-1 h-2">
+                  <div 
+                    className="h-2 rounded-l-full bg-rose-500"
+                    style={{ width: `${(month.violations / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
+                  />
+                  <div 
+                    className="h-2 bg-emerald-500"
+                    style={{ width: `${(month.permits / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
+                  />
+                  <div 
+                    className="h-2 rounded-r-full bg-amber-500"
+                    style={{ width: `${(month.reservations / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
+                  />
                 </div>
               </div>
-              <div className="flex gap-1 h-2">
-                <div 
-                  className="h-2 rounded-l-full bg-rose-500"
-                  style={{ width: `${(month.violations / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
-                />
-                <div 
-                  className="h-2 bg-emerald-500"
-                  style={{ width: `${(month.permits / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
-                />
-                <div 
-                  className="h-2 rounded-r-full bg-amber-500"
-                  style={{ width: `${(month.reservations / Math.max(month.violations, month.permits, month.reservations)) * 33}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-slate-500 text-center py-4">No monthly trend data available</p>
+          )}
         </div>
       </div>
     </div>
