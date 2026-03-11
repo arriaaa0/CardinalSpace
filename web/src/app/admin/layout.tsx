@@ -76,15 +76,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <p className="px-1 text-sm text-rose-50/90">CardinalSpace</p>
 
         <nav className="mt-6 flex-1 space-y-1 text-sm text-rose-50/90">
-          <SectionLabel label="Main" />
           <NavLink href="/admin/dashboard" label="Dashboard" />
-
-          <SectionLabel label="Management" />
           <NavLink href="/admin/permits" label="User Permits" />
-          <NavLink href="/admin/violations" label="Permit Management" />
+          <NavLink href="/admin/permit-management" label="Permit Management" />
+          <NavLink href="/admin/reservations" label="Reservations" />
+          <NavLink href="/admin/access-logs" label="Access Logs" />
+          <NavLink href="/admin/violations" label="Violations" />
           <NavLink href="/admin/appeals" label="Appeals" />
-
-          <SectionLabel label="Monitoring" />
           <NavLink href="/admin/analytics" label="Analytics" />
           <NavLink href="/admin/audit-logs" label="Audit Logs" />
         </nav>
