@@ -26,23 +26,48 @@ export async function POST(request: NextRequest) {
   const action = url.searchParams.get('action') || 'login'
 
   try {
-    const { email, password, name } = await request.json()
+    const body = await request.json()
+    const { email, password, name, accountType, vehiclePlate, vehicleMake, vehicleModel } = body
 
     if (action === 'signup') {
       // Create new user
       const existingUser = await prisma.user.findUnique({ where: { email } })
       if (existingUser) {
-        return NextResponse.json({ error: 'User already exists' }, { status: 400 })
+        return NextResponse.json({ error: 'This email is already registered. Please login instead.' }, { status: 400 })
       }
 
       const hashedPassword = await bcrypt.hash(password, 12)
+      
+      // Create user and vehicle in a transaction
       const user = await prisma.user.create({
-        data: { email, password: hashedPassword, name }
+        data: { 
+          email, 
+          password: hashedPassword, 
+          name,
+          role: accountType === 'STUDENT' || accountType === 'FACULTY' ? 'USER' : 'USER'
+        }
       })
+
+      // Create vehicle if provided
+      if (vehiclePlate && vehicleMake && vehicleModel) {
+        await prisma.vehicle.create({
+          data: {
+            userId: user.id,
+            licensePlate: vehiclePlate,
+            make: vehicleMake,
+            model: vehicleModel,
+            year: new Date().getFullYear(),
+            color: 'Not specified'
+          }
+        })
+      }
 
       const token = await createToken(user.id, user.email, user.name || '', user.role)
       
-      const response = NextResponse.json({ success: true })
+      const response = NextResponse.json({ 
+        success: true,
+        message: 'Account created. Permit approval pending'
+      })
       response.cookies.set('auth-token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
