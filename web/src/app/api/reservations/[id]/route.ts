@@ -5,9 +5,10 @@ import { cookies } from "next/headers"
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const cookieStore = await cookies()
     const token = cookieStore.get("auth-token")?.value
 
@@ -24,7 +25,7 @@ export async function DELETE(
     // Check if reservation exists and belongs to user
     const reservation = await prisma.reservation.findFirst({
       where: { 
-        id: params.id,
+        id: id,
         userId 
       }
     })
@@ -35,7 +36,7 @@ export async function DELETE(
 
     // Delete the reservation
     await prisma.reservation.delete({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     return NextResponse.json({ 
