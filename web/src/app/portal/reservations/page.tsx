@@ -201,13 +201,13 @@ export default function PortalReservationsPage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
               />
               <input
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-24 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-24 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
               />
             </div>
           </div>
@@ -220,13 +220,13 @@ export default function PortalReservationsPage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
               />
               <input
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-24 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-24 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
               />
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function PortalReservationsPage() {
           <select
             value={selectedVehicle}
             onChange={(e) => setSelectedVehicle(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
           >
             {VEHICLES.map((v) => (
               <option key={v.id} value={v.id}>
