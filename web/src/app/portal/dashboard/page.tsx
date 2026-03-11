@@ -30,8 +30,20 @@ export default function PortalDashboardPage() {
 
   const formatTime = (timeString: string) => {
     const time = new Date(timeString);
+    
+    // Check if date is valid
+    if (isNaN(time.getTime())) {
+      return "Recently";
+    }
+    
     const now = new Date();
     const diffMs = now.getTime() - time.getTime();
+    
+    // Check if time difference is valid
+    if (isNaN(diffMs) || diffMs < 0) {
+      return "Recently";
+    }
+    
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
@@ -272,8 +284,20 @@ function NotificationRow({ title, time, type }: { title: string; time: string; t
 
   const formatTime = (timeString: string) => {
     const time = new Date(timeString);
+    
+    // Check if date is valid
+    if (isNaN(time.getTime())) {
+      return "Recently";
+    }
+    
     const now = new Date();
     const diffMs = now.getTime() - time.getTime();
+    
+    // Check if time difference is valid
+    if (isNaN(diffMs) || diffMs < 0) {
+      return "Recently";
+    }
+    
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);

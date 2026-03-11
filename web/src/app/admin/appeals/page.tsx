@@ -79,7 +79,7 @@ export default function AdminAppealsPage() {
       );
     }
     return (
-      <button className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-700 hover:border-rose-300 hover:text-rose-800">
+      <button onClick={onClick} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-700 hover:border-rose-300 hover:text-rose-800">
         {label}
       </button>
     );
