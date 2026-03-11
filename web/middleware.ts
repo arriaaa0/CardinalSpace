@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { jwtVerify } from 'jose'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const authToken = request.cookies.get('auth-token')?.value
 
@@ -20,10 +21,22 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If user has auth token and tries to access login pages, redirect to dashboard
+  // If user has auth token and tries to access login pages, redirect to appropriate dashboard
   if (authToken && (pathname === '/portal/login' || pathname === '/admin/login')) {
-    // Redirect to portal dashboard for now (you could decode token to check role)
-    return NextResponse.redirect(new URL('/portal/dashboard', request.url))
+    try {
+      const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'e8f7g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8')
+      const { payload } = await jwtVerify(authToken, secret)
+      
+      // Check role from JWT token
+      if (payload.role === 'ADMIN') {
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/portal/dashboard', request.url))
+      }
+    } catch (error) {
+      // Invalid token, allow access to login page
+      return NextResponse.next()
+    }
   }
 
   return NextResponse.next()

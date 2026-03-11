@@ -7,11 +7,12 @@ const secret = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET || 'e8f7g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8'
 )
 
-async function createToken(userId: string, email: string, name: string) {
+async function createToken(userId: string, email: string, name: string, role: string) {
   const token = await new SignJWT({ 
     sub: userId,  // Standard JWT subject claim
     email, 
-    name 
+    name,
+    role  // Include role in token
   })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         data: { email, password: hashedPassword, name }
       })
 
-      const token = await createToken(user.id, user.email, user.name || '')
+      const token = await createToken(user.id, user.email, user.name || '', user.role)
       
       const response = NextResponse.json({ success: true })
       response.cookies.set('auth-token', token, {
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    const token = await createToken(user.id, user.email, user.name || '')
+    const token = await createToken(user.id, user.email, user.name || '', user.role)
     
     const response = NextResponse.json({ success: true, role: user.role })
     response.cookies.set('auth-token', token, {
