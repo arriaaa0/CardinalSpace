@@ -30,8 +30,8 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
       if (!response.ok) {
         setError(data.error || "Invalid credentials")
       } else {
-        router.refresh()
-        router.push("/portal/dashboard")
+        // Use window.location for hard redirect to avoid white page
+        window.location.href = "/portal/dashboard"
       }
     } catch (err) {
       setError("An error occurred. Please try again.")

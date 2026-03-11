@@ -34,8 +34,8 @@ export default function AdminLoginPage() {
           setError("You do not have admin access")
           return
         }
-        router.refresh()
-        router.push("/admin/dashboard")
+        // Use window.location for hard redirect to avoid white page
+        window.location.href = "/admin/dashboard"
       }
     } catch (err) {
       setError("An error occurred. Please try again.")
