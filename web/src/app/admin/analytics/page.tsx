@@ -155,7 +155,7 @@ export default function AdminAnalyticsPage() {
           <div className="space-y-3">
             {Object.entries(analytics.permitsByStatus).map(([status, count]) => {
               const total = Object.values(analytics.permitsByStatus).reduce((sum: number, val: any) => sum + val, 0)
-              const percentage = total > 0 ? (count / total) * 100 : 0
+              const percentage = total > 0 ? (Number(count) / total) * 100 : 0
               const colors = {
                 PENDING: 'bg-amber-500',
                 APPROVED: 'bg-emerald-500',
@@ -166,7 +166,7 @@ export default function AdminAnalyticsPage() {
                 <div key={status}>
                   <div className="flex items-center justify-between text-sm mb-1">
                     <span className="font-medium text-slate-700">{status}</span>
-                    <span className="text-slate-600">{count} ({percentage.toFixed(1)}%)</span>
+                    <span className="text-slate-600">{Number(count)} ({percentage.toFixed(1)}%)</span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100">
                     <div 
@@ -186,13 +186,13 @@ export default function AdminAnalyticsPage() {
           <div className="space-y-3">
             {Object.entries(analytics.violationsByType).map(([type, count]) => {
               const total = Object.values(analytics.violationsByType).reduce((sum: number, val: any) => sum + val, 0)
-              const percentage = total > 0 ? (count / total) * 100 : 0
+              const percentage = total > 0 ? (Number(count) / total) * 100 : 0
               
               return (
                 <div key={type}>
                   <div className="flex items-center justify-between text-sm mb-1">
                     <span className="font-medium text-slate-700">{type}</span>
-                    <span className="text-slate-600">{count} ({percentage.toFixed(1)}%)</span>
+                    <span className="text-slate-600">{Number(count)} ({percentage.toFixed(1)}%)</span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100">
                     <div 
@@ -212,7 +212,7 @@ export default function AdminAnalyticsPage() {
           <div className="space-y-3">
             {Object.entries(analytics.violationsByStatus).map(([status, count]) => {
               const total = Object.values(analytics.violationsByStatus).reduce((sum: number, val: any) => sum + val, 0)
-              const percentage = total > 0 ? (count / total) * 100 : 0
+              const percentage = total > 0 ? (Number(count) / total) * 100 : 0
               const colors = {
                 UNPAID: 'bg-rose-500',
                 PAID: 'bg-emerald-500',
@@ -224,7 +224,7 @@ export default function AdminAnalyticsPage() {
                 <div key={status}>
                   <div className="flex items-center justify-between text-sm mb-1">
                     <span className="font-medium text-slate-700">{status}</span>
-                    <span className="text-slate-600">{count} ({percentage.toFixed(1)}%)</span>
+                    <span className="text-slate-600">{Number(count)} ({percentage.toFixed(1)}%)</span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100">
                     <div 
