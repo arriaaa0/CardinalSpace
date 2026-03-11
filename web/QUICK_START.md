@@ -1,25 +1,25 @@
-# 🚀 Quick Start - Deploy to Vercel in 10 Minutes
+# Quick Start - Deploy to Vercel in 10 Minutes
 
 ## What Changed?
 
-Your CardinalSpace app has been **migrated from SQLite to PostgreSQL** and is now **ready for Vercel deployment**.
+Your CardinalSpace app has been migrated from SQLite to PostgreSQL and is now ready for Vercel deployment.
 
 ### Files Modified:
-- ✅ `prisma/schema.prisma` - Now uses PostgreSQL
-- ✅ `package.json` - Updated build scripts for Vercel
-- ✅ `.env.example` - Updated with PostgreSQL connection strings
-- ✅ `src/lib/prisma.ts` - Added connection pooling for performance
-- ✅ `README.md` - Updated documentation
+- `prisma/schema.prisma` - Now uses PostgreSQL
+- `package.json` - Updated build scripts for Vercel
+- `.env.example` - Updated with PostgreSQL connection strings
+- `src/lib/prisma.ts` - Added connection pooling for performance
+- `README.md` - Updated documentation
 
 ### Files Created:
-- ✅ `vercel.json` - Vercel configuration
-- ✅ `VERCEL_DEPLOYMENT.md` - Complete deployment guide
-- ✅ `MIGRATION_GUIDE.md` - Migration instructions
-- ✅ `QUICK_START.md` - This file!
+- `vercel.json` - Vercel configuration
+- `VERCEL_DEPLOYMENT.md` - Complete deployment guide
+- `MIGRATION_GUIDE.md` - Migration instructions
+- `QUICK_START.md` - This file!
 
 ---
 
-## 🎯 Deploy Now (10 Minutes)
+## Deploy Now (10 Minutes)
 
 ### Step 1: Push to GitHub (2 min)
 ```bash
@@ -35,28 +35,28 @@ git push origin main
 
 ### Step 3: Create Database (2 min)
 1. Go to https://vercel.com/dashboard
-2. Click **Storage** → **Create Database** → **Postgres**
+2. Click Storage → Create Database → Postgres
 3. Name it: `cardinalspace-db`
-4. Click **Create**
+4. Click Create
 
 ### Step 4: Deploy App (3 min)
 1. Go to https://vercel.com/new
 2. Import your GitHub repository
-3. **Root Directory:** `web`
-4. Click **Deploy**
+3. Root Directory: `web`
+4. Click Deploy
 
 ### Step 5: Add Environment Variables (2 min)
-1. Go to your project → **Settings** → **Environment Variables**
+1. Go to your project → Settings → Environment Variables
 2. Add these 4 variables:
 
-   **DATABASE_URL:**
+   DATABASE_URL:
    - Go to Storage → cardinalspace-db → `.env.local` tab
    - Copy `POSTGRES_PRISMA_URL` value
    
-   **DIRECT_URL:**
+   DIRECT_URL:
    - Copy `POSTGRES_URL_NON_POOLING` value
    
-   **NEXTAUTH_SECRET:**
+   NEXTAUTH_SECRET:
    - Generate: https://generate-secret.vercel.app/32
    
    **NEXTAUTH_URL:**

@@ -74,7 +74,7 @@ NODE_ENV="production"
 PORT=3000
 ```
 
-⚠️ **CRITICAL: Always set `NODE_ENV=production`** - Without this, the app runs in dev mode and generates different chunk files, causing 404 errors.
+CRITICAL: Always set `NODE_ENV=production` - Without this, the app runs in dev mode and generates different chunk files, causing 404 errors.
 
 ### 4. Build & Deploy
 

@@ -1,14 +1,14 @@
 # Migration Guide: SQLite to PostgreSQL
 
-## 🔄 For Existing Local Development
+## For Existing Local Development
 
 If you were previously using SQLite locally and want to switch to PostgreSQL:
 
-### Option 1: Use Vercel Postgres for Development (Recommended)
+### Option 1: Use Vercel Postgres for Development
 
-1. **Create a development database** in Vercel (separate from production)
-2. **Get connection strings** from Vercel dashboard
-3. **Update your `.env.local`:**
+1. Create a development database in Vercel (separate from production)
+2. Get connection strings from Vercel dashboard
+3. Update your `.env.local`:
    ```env
    DATABASE_URL="postgres://..."  # From Vercel Postgres
    DIRECT_URL="postgres://..."     # From Vercel Postgres
@@ -18,12 +18,12 @@ If you were previously using SQLite locally and want to switch to PostgreSQL:
 
 ### Option 2: Use Local PostgreSQL
 
-1. **Install PostgreSQL:**
+1. Install PostgreSQL:
    - Windows: Download from https://www.postgresql.org/download/windows/
    - Mac: `brew install postgresql`
    - Linux: `sudo apt-get install postgresql`
 
-2. **Create database:**
+2. Create database:
    ```bash
    # Start PostgreSQL
    # Windows: Use pgAdmin or Services
@@ -35,7 +35,7 @@ If you were previously using SQLite locally and want to switch to PostgreSQL:
    createdb cardinalspace
    ```
 
-3. **Update `.env.local`:**
+3. Update `.env.local`:
    ```env
    DATABASE_URL="postgresql://postgres:password@localhost:5432/cardinalspace"
    DIRECT_URL="postgresql://postgres:password@localhost:5432/cardinalspace"
@@ -58,13 +58,13 @@ npm run seed
 
 ---
 
-## 📊 Migrating Existing Data (If You Have Important Data)
+## Migrating Existing Data (If You Have Important Data)
 
 If you have existing data in SQLite that you need to migrate:
 
 ### Manual Export/Import
 
-1. **Export from SQLite:**
+1. Export from SQLite:
    ```bash
    # Install sqlite3 if needed
    npm install -g sqlite3
