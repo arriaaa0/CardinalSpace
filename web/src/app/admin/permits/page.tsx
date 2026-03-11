@@ -36,7 +36,8 @@ export default function AdminPermitsPage() {
       if (response.ok) {
         const result = await response.json()
         console.log("Permit approved:", result)
-        fetchApplications()
+        alert("Permit approved successfully!")
+        await fetchApplications() // Force refresh
       } else {
         const error = await response.json()
         console.error("Approve failed:", error.error)
@@ -59,7 +60,8 @@ export default function AdminPermitsPage() {
       if (response.ok) {
         const result = await response.json()
         console.log("Permit denied:", result)
-        fetchApplications()
+        alert("Permit rejected successfully!")
+        await fetchApplications() // Force refresh
       } else {
         const error = await response.json()
         console.error("Deny failed:", error.error)
@@ -93,9 +95,9 @@ export default function AdminPermitsPage() {
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-2 text-xs">
             <FilterChip label="All" active={filter === "All"} onClick={() => setFilter("All")} />
-            <FilterChip label="Pending" active={filter === "Pending"} onClick={() => setFilter("Pending")} />
-            <FilterChip label="Approved" active={filter === "Approved"} onClick={() => setFilter("Approved")} />
-            <FilterChip label="Denied" active={filter === "Denied"} onClick={() => setFilter("Denied")} />
+            <FilterChip label="Pending" active={filter === "PENDING"} onClick={() => setFilter("PENDING")} />
+            <FilterChip label="Approved" active={filter === "APPROVED"} onClick={() => setFilter("APPROVED")} />
+            <FilterChip label="Rejected" active={filter === "REJECTED"} onClick={() => setFilter("REJECTED")} />
           </div>
           <div className="flex items-center gap-2 text-xs">
             <input

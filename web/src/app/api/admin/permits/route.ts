@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
           day: "numeric",
           year: "numeric"
         }),
-        status: permit?.status || "Pending"
+        status: permit?.status || "PENDING"
       }
     })
 
