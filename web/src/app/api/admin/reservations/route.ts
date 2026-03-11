@@ -10,7 +10,7 @@ export async function GET() {
         vehicle: true,
       },
       orderBy: {
-        startTime: "desc",
+        createdAt: "desc",
       },
     })
 
@@ -18,10 +18,10 @@ export async function GET() {
       id: res.id,
       userName: res.user.name || res.user.email,
       vehiclePlate: res.vehicle?.licensePlate || "N/A",
-      lotLocation: res.lotLocation || "N/A",
-      spotNumber: res.spotNumber || "N/A",
-      startTime: new Date(res.startTime).toLocaleString(),
-      endTime: new Date(res.endTime).toLocaleString(),
+      lot: res.lot || "N/A",
+      space: res.space || "N/A",
+      startDate: new Date(res.startDate).toLocaleString(),
+      endDate: new Date(res.endDate).toLocaleString(),
       status: res.status,
     }))
 
