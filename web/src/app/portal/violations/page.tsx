@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Violation {
   id: string;
@@ -22,38 +22,28 @@ interface Appeal {
 }
 
 export default function PortalViolationsPage() {
-  const [violations, setViolations] = useState<Violation[]>([
-    {
-      id: "V001",
-      date: "2026-03-08",
-      time: "14:30",
-      lot: "Lot A - Ground Floor",
-      type: "Overstayed",
-      amount: 1500,
-      status: "unpaid",
-      description: "Exceeded reserved time by 45 minutes",
-    },
-    {
-      id: "V002",
-      date: "2026-03-05",
-      time: "10:15",
-      lot: "Lot C - Basement 1",
-      type: "Invalid Permit",
-      amount: 2000,
-      status: "paid",
-      description: "Parking in employee-only zone",
-    },
-  ]);
+  const [violations, setViolations] = useState<Violation[]>([]);
+  const [appeals, setAppeals] = useState<Appeal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [appeals, setAppeals] = useState<Appeal[]>([
-    {
-      id: "A001",
-      violationId: "V002",
-      reason: "I had valid permit on that day",
-      evidence: "Permit documentation attached",
-      status: "pending",
-    },
-  ]);
+  useEffect(() => {
+    fetchViolations();
+  }, []);
+
+  const fetchViolations = async () => {
+    try {
+      const response = await fetch("/api/user/violations");
+      if (response.ok) {
+        const data = await response.json();
+        setViolations(data.violations || []);
+        setAppeals(data.appeals || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch violations:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const [showAppealForm, setShowAppealForm] = useState(false);
   const [selectedViolation, setSelectedViolation] = useState<string | null>(null);
@@ -106,7 +96,12 @@ export default function PortalViolationsPage() {
       <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Violations</h2>
         <div className="space-y-3">
-          {violations.length === 0 ? (
+          {isLoading ? (
+            <div className="py-8 text-center">
+              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-rose-900"></div>
+              <p className="mt-4 text-sm text-slate-600">Loading violations...</p>
+            </div>
+          ) : violations.length === 0 ? (
             <p className="text-sm text-slate-600">No violations recorded.</p>
           ) : (
             violations.map((v) => {
