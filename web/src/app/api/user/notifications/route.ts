@@ -49,7 +49,7 @@ export async function GET() {
           id: `permit-${permit.id}`,
           title: "Your parking permit has been approved",
           description: "You can now access parking facilities",
-          time: new Date(permit.updatedAt).toLocaleString(),
+          time: new Date(permit.updatedAt || permit.createdAt).toLocaleString(),
           type: "success"
         })
       } else if (permit.status === "REJECTED") {
@@ -57,7 +57,7 @@ export async function GET() {
           id: `permit-${permit.id}`,
           title: "Your parking permit was rejected",
           description: "Please contact admin for more information",
-          time: new Date(permit.updatedAt).toLocaleString(),
+          time: new Date(permit.updatedAt || permit.createdAt).toLocaleString(),
           type: "error"
         })
       }

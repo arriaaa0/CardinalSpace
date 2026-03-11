@@ -12,6 +12,7 @@ export default function AdminDashboardPage() {
     violations: 0
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
 
   useEffect(() => {
     // Fetch real dashboard stats
@@ -35,7 +36,87 @@ export default function AdminDashboardPage() {
       .finally(() => {
         setIsLoading(false)
       })
+
+    // Fetch recent activity
+    fetchRecentActivity()
   }, [])
+
+  const fetchRecentActivity = async () => {
+    try {
+      const [permitsRes, violationsRes, appealsRes, reservationsRes] = await Promise.all([
+        fetch("/api/admin/permits"),
+        fetch("/api/admin/violations"),
+        fetch("/api/admin/appeals"),
+        fetch("/api/admin/reservations")
+      ])
+
+      const permits = await permitsRes.json().catch(() => ({ applications: [] }))
+      const violations = await violationsRes.json().catch(() => ({ violations: [] }))
+      const appeals = await appealsRes.json().catch(() => ({ appeals: [] }))
+      const reservations = await reservationsRes.json().catch(() => ({ reservations: [] }))
+
+      const activities = []
+
+      // Add permit activities
+      permits.applications?.slice(0, 2).forEach(permit => {
+        activities.push({
+          name: permit.name,
+          action: `Permit ${permit.status.toLowerCase()}`,
+          time: formatTime(permit.submitted),
+          dotClass: permit.status === 'APPROVED' ? 'bg-emerald-500' : 'bg-rose-500'
+        })
+      })
+
+      // Add violation activities
+      violations.violations?.slice(0, 2).forEach(violation => {
+        activities.push({
+          name: violation.user?.name || 'Unknown',
+          action: `Violation issued: ${violation.type}`,
+          time: formatTime(violation.issuedAt),
+          dotClass: 'bg-rose-500'
+        })
+      })
+
+      // Add appeal activities
+      appeals.appeals?.slice(0, 2).forEach(appeal => {
+        activities.push({
+          name: appeal.user?.name || 'Unknown',
+          action: `Appeal ${appeal.status.toLowerCase()}`,
+          time: formatTime(appeal.createdAt),
+          dotClass: appeal.status === 'APPROVED' ? 'bg-emerald-500' : appeal.status === 'DENIED' ? 'bg-rose-500' : 'bg-amber-500'
+        })
+      })
+
+      // Add reservation activities
+      reservations.reservations?.slice(0, 2).forEach(reservation => {
+        activities.push({
+          name: `User ${reservation.userId}`,
+          action: `Reservation for ${reservation.lot}`,
+          time: formatTime(reservation.createdAt),
+          dotClass: 'bg-sky-500'
+        })
+      })
+
+      // Sort by time and take latest 4
+      setRecentActivity(activities.slice(0, 4))
+    } catch (error) {
+      console.error("Failed to fetch recent activity:", error)
+    }
+  }
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMs / 3600000)
+    const diffDays = Math.floor(diffMs / 86400000)
+
+    if (diffMins < 1) return "Just now"
+    if (diffMins < 60) return `${diffMins} min ago`
+    if (diffHours < 24) return `${diffHours} hr ago`
+    return `${diffDays} day ago`
+  }
 
   return (
     <div className="space-y-6">
@@ -126,30 +207,19 @@ export default function AdminDashboardPage() {
           </header>
 
           <div className="space-y-3 text-xs">
-            <ActivityRow
-              name="John Smith"
-              action="Permit application approved"
-              time="5 min ago"
-              dotClass="bg-emerald-500"
-            />
-            <ActivityRow
-              name="Sarah Johnson"
-              action="Parking violation reported"
-              time="12 min ago"
-              dotClass="bg-rose-500"
-            />
-            <ActivityRow
-              name="Mike Davis"
-              action="Reservation created for Lot A"
-              time="23 min ago"
-              dotClass="bg-sky-500"
-            />
-            <ActivityRow
-              name="Emily Wilson"
-              action="Appeal submitted"
-              time="1 hour ago"
-              dotClass="bg-amber-500"
-            />
+            {recentActivity.length === 0 ? (
+              <p className="text-slate-500 text-center py-4">No recent activity</p>
+            ) : (
+              recentActivity.map((activity, index) => (
+                <ActivityRow
+                  key={index}
+                  name={activity.name}
+                  action={activity.action}
+                  time={activity.time}
+                  dotClass={activity.dotClass}
+                />
+              ))
+            )}
           </div>
         </section>
       </div>

@@ -50,7 +50,7 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
       </div>
 
       {/* Centered login card overlapping header */}
-      <div className="-mt-16 flex flex-1 items-start justify-center px-4 pb-12">
+      <div className="-mt-8 flex flex-1 items-start justify-center px-4 pb-12">
         <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
           <header className="mb-6 text-center">
             <h1 className="text-2xl font-semibold text-slate-900">
