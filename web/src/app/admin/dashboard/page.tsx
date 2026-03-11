@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function AdminDashboardPage() {
+  const router = useRouter()
   const [stats, setStats] = useState({
     totalPermits: 0,
     activeReservations: 0,
@@ -158,10 +160,10 @@ export default function AdminDashboardPage() {
           Quick Actions
         </h2>
         <div className="grid gap-3 sm:grid-cols-4">
-          <QuickAction label="Review Permits" />
-          <QuickAction label="Violations" />
-          <QuickAction label="Reservations" />
-          <QuickAction label="View Appeals" />
+          <QuickAction label="Review Permits" onClick={() => router.push("/admin/permits")} />
+          <QuickAction label="Violations" onClick={() => router.push("/admin/violations")} />
+          <QuickAction label="Reservations" onClick={() => router.push("/admin/reservations")} />
+          <QuickAction label="View Appeals" onClick={() => router.push("/admin/appeals")} />
         </div>
       </section>
     </div>
@@ -242,9 +244,9 @@ function ActivityRow({ name, action, time, dotClass }: ActivityProps) {
   );
 }
 
-function QuickAction({ label }: { label: string }) {
+function QuickAction({ label, onClick }: { label: string; onClick?: () => void }) {
   return (
-    <button className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-4 text-xs font-semibold text-slate-800 hover:border-rose-300 hover:bg-rose-50">
+    <button onClick={onClick} className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-4 text-xs font-semibold text-slate-800 hover:border-rose-300 hover:bg-rose-50">
       <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-rose-100 text-rose-700">
         <span className="text-sm">◎</span>
       </div>
