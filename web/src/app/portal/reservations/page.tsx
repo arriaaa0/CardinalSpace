@@ -16,38 +16,21 @@ const SPACES = {
   D: Array.from({ length: 64 }, (_, i) => `D-${i + 1}`),
 };
 
-const VEHICLES = [
-  { id: "1", plate: "ABC 1234", make: "Toyota", model: "Camry" },
-  { id: "2", plate: "XYZ 5678", make: "Honda", model: "Civic" },
-];
+const [vehicles, setVehicles] = useState<any[]>([]);
+const [selectedLot, setSelectedLot] = useState("C");
+const [selectedSpace, setSelectedSpace] = useState("C-15");
+const [startDate, setStartDate] = useState("2026-03-10");
+const [startTime, setStartTime] = useState("10:00");
+const [endDate, setEndDate] = useState("2026-03-10");
+const [endTime, setEndTime] = useState("18:00");
+const [selectedVehicle, setSelectedVehicle] = useState("1");
+const [reservations, setReservations] = useState<any[]>([]);
+const [loading, setLoading] = useState(false);
+const [showQRCode, setShowQRCode] = useState<string | null>(null);
+const [qrData, setQrData] = useState<any>(null);
 
 export default function PortalReservationsPage() {
   const [step, setStep] = useState<"list" | "book" | "payment">("list");
-  const [selectedLot, setSelectedLot] = useState("C");
-  const [selectedSpace, setSelectedSpace] = useState("C-15");
-  const [startDate, setStartDate] = useState("2026-03-10");
-  const [startTime, setStartTime] = useState("10:00");
-  const [endDate, setEndDate] = useState("2026-03-10");
-  const [endTime, setEndTime] = useState("18:00");
-  const [selectedVehicle, setSelectedVehicle] = useState("1");
-  const [reservations, setReservations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchReservations();
-  }, []);
-
-  const fetchReservations = async () => {
-    try {
-      const response = await fetch("/api/reservations");
-      if (response.ok) {
-        const data = await response.json();
-        setReservations(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch reservations:", error);
-    }
-  };
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -62,17 +45,47 @@ export default function PortalReservationsPage() {
   const duration = calculateDuration();
   const totalAmount = Math.round(duration * selectedLotData.hourlyRate * 100) / 100;
 
+  useEffect(() => {
+    fetchReservations();
+    fetchVehicles();
+  }, []);
+
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch("/api/user/vehicles");
+      if (response.ok) {
+        const data = await response.json();
+        setVehicles(data.vehicles || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch vehicles:", error);
+    }
+  };
+
+  const fetchReservations = async () => {
+    try {
+      const response = await fetch("/api/user/reservations");
+      if (response.ok) {
+        const data = await response.json();
+        setReservations(data.reservations || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch reservations:", error);
+    }
+  };
+
   const handleConfirmReservation = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/reservations", {
+      const response = await fetch("/api/user/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lot: selectedLotData.name,
           space: selectedSpace,
-          startDate,
-          endDate,
+          startDate: `${startDate}T${startTime}`,
+          endDate: `${endDate}T${endTime}`,
+          vehicleId: selectedVehicle
         }),
       });
 
@@ -95,7 +108,7 @@ export default function PortalReservationsPage() {
 
   const handleCancelReservation = async (id: string) => {
     try {
-      const response = await fetch(`/api/reservations/${id}`, {
+      const response = await fetch(`/api/user/reservations/${id}`, {
         method: "DELETE"
       })
       
@@ -108,6 +121,22 @@ export default function PortalReservationsPage() {
     } catch (error) {
       console.error("Cancel reservation error:", error)
       alert("Failed to cancel reservation")
+    }
+  };
+
+  const handleShowQRCode = async (reservationId: string) => {
+    try {
+      const response = await fetch(`/api/user/reservations/${reservationId}/qr`)
+      if (response.ok) {
+        const data = await response.json()
+        setQrData(data.qrData)
+        setShowQRCode(reservationId)
+      } else {
+        alert("Failed to load QR code")
+      }
+    } catch (error) {
+      console.error("QR code error:", error)
+      alert("Failed to load QR code")
     }
   };
 
@@ -260,9 +289,9 @@ export default function PortalReservationsPage() {
             onChange={(e) => setSelectedVehicle(e.target.value)}
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 bg-white"
           >
-            {VEHICLES.map((v) => (
+            {vehicles.map((v: any) => (
               <option key={v.id} value={v.id}>
-                {v.make} {v.model} • {v.plate}
+                {v.make} {v.model} • {v.licensePlate}
               </option>
             ))}
           </select>
@@ -291,7 +320,7 @@ export default function PortalReservationsPage() {
             <div className="flex justify-between">
               <span className="text-slate-700">Vehicle</span>
               <span className="font-semibold text-slate-900">
-                {VEHICLES.find((v) => v.id === selectedVehicle)?.plate}
+                {vehicles.find((v: any) => v.id === selectedVehicle)?.licensePlate}
               </span>
             </div>
             <div className="flex justify-between">
@@ -369,20 +398,83 @@ export default function PortalReservationsPage() {
               </div>
               <div className="space-y-2 mb-4 text-sm text-slate-700">
                 <p>
-                  <span className="font-semibold">Start:</span> {res.startDate}
+                  <span className="font-semibold">Start:</span> {new Date(res.startDate).toLocaleString()}
                 </p>
                 <p>
-                  <span className="font-semibold">End:</span> {res.endDate}
+                  <span className="font-semibold">End:</span> {new Date(res.endDate).toLocaleString()}
                 </p>
               </div>
-              <button
-                onClick={() => handleCancelReservation(res.id)}
-                className="w-full rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
-              >
-                Cancel Reservation
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleShowQRCode(res.id)}
+                  className="flex-1 rounded-full bg-rose-800 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-900"
+                >
+                  View QR Code
+                </button>
+                <button
+                  onClick={() => handleCancelReservation(res.id)}
+                  className="flex-1 rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {showQRCode && qrData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-900">QR Code</h2>
+              <button
+                onClick={() => setShowQRCode(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="bg-slate-100 rounded-lg p-8 mb-4 text-center">
+              <div className="w-48 h-48 bg-white rounded-lg mx-auto flex items-center justify-center border-2 border-slate-300">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🅿️</div>
+                  <p className="text-xs text-slate-600 font-mono">{qrData.qrCode}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600">Reservation ID:</span>
+                <span className="font-semibold text-slate-900">{qrData.reservationId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Location:</span>
+                <span className="font-semibold text-slate-900">{qrData.lot} - {qrData.space}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Vehicle:</span>
+                <span className="font-semibold text-slate-900">{qrData.vehiclePlate}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Valid From:</span>
+                <span className="font-semibold text-slate-900">{new Date(qrData.validFrom).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Valid To:</span>
+                <span className="font-semibold text-slate-900">{new Date(qrData.validTo).toLocaleString()}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 p-3 bg-amber-50 rounded-lg">
+              <p className="text-xs text-amber-800 text-center">
+                ⚠️ Show this QR code at the parking entrance for validation
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>

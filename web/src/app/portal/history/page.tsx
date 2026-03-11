@@ -1,91 +1,54 @@
 "use client";
 
-import { useState } from "react";
-
-interface HistoryEntry {
-  id: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  lot: string;
-  space: string;
-  vehicle: string;
-  duration: number;
-  rate: number;
-  amount: number;
-  status: "completed" | "cancelled";
-}
+import { useState, useEffect } from "react";
 
 export default function PortalHistoryPage() {
-  const [history, setHistory] = useState<HistoryEntry[]>([
-    {
-      id: "H001",
-      date: "2026-03-10",
-      startTime: "08:00",
-      endTime: "17:00",
-      lot: "Lot C - Basement 1",
-      space: "C-15",
-      vehicle: "ABC 1234",
-      duration: 9,
-      rate: 50,
-      amount: 450,
-      status: "completed",
-    },
-    {
-      id: "H002",
-      date: "2026-03-09",
-      startTime: "10:30",
-      endTime: "14:45",
-      lot: "Lot A - Ground Floor",
-      space: "A-42",
-      vehicle: "ABC 1234",
-      duration: 4.25,
-      rate: 40,
-      amount: 170,
-      status: "completed",
-    },
-    {
-      id: "H003",
-      date: "2026-03-08",
-      startTime: "09:00",
-      endTime: "16:00",
-      lot: "Lot B - Basement 1",
-      space: "B-28",
-      vehicle: "XYZ 5678",
-      duration: 7,
-      rate: 45,
-      amount: 315,
-      status: "completed",
-    },
-    {
-      id: "H004",
-      date: "2026-03-07",
-      startTime: "11:00",
-      endTime: "13:00",
-      lot: "Lot D - Basement 2",
-      space: "D-61",
-      vehicle: "ABC 1234",
-      duration: 2,
-      rate: 35,
-      amount: 70,
-      status: "cancelled",
-    },
-  ]);
+  const [historyData, setHistoryData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [filterDate, setFilterDate] = useState("")
+  const [filterLot, setFilterLot] = useState("")
 
-  const [filterDate, setFilterDate] = useState("");
-  const [filterLot, setFilterLot] = useState("");
+  useEffect(() => {
+    fetchHistory()
+  }, [])
 
-  const filteredHistory = history.filter((h) => {
-    if (filterDate && h.date !== filterDate) return false;
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch("/api/user/history")
+      if (response.ok) {
+        const data = await response.json()
+        setHistoryData(data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch history:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredHistory = historyData?.history?.reservations?.filter((h: any) => {
+    if (filterDate && new Date(h.startDate).toLocaleDateString() !== filterDate) return false;
     if (filterLot && h.lot !== filterLot) return false;
     return true;
-  });
+  }) || [];
 
-  const totalSpent = history
-    .filter((h) => h.status === "completed")
-    .reduce((sum, h) => sum + h.amount, 0);
+  const totalSpent = historyData?.statistics?.totalAmount || 0;
 
-  const lots = [...new Set(history.map((h) => h.lot))];
+  const lots = [...new Set(historyData?.history?.reservations?.map((h: any) => h.lot) || [])];
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <header>
+          <h1 className="text-2xl font-semibold text-slate-900">Parking History</h1>
+        </header>
+        <div className="text-center py-12">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-rose-900"></div>
+          <p className="mt-4 text-slate-600">Loading history...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -100,16 +63,16 @@ export default function PortalHistoryPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Total Sessions</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">{history.length}</p>
+          <p className="mt-2 text-3xl font-bold text-slate-900">{historyData?.statistics?.totalSessions || 0}</p>
         </div>
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Total Spent</p>
           <p className="mt-2 text-3xl font-bold text-slate-900">₱{totalSpent}</p>
         </div>
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Completed</p>
-          <p className="mt-2 text-3xl font-bold text-emerald-600">
-            {history.filter((h) => h.status === "completed").length}
+          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Violations</p>
+          <p className="mt-2 text-3xl font-bold text-rose-600">
+            {historyData?.statistics?.totalViolations || 0}
           </p>
         </div>
       </div>
@@ -135,7 +98,7 @@ export default function PortalHistoryPage() {
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
             >
               <option value="">All Lots</option>
-              {lots.map((lot) => (
+              {lots.map((lot: any) => (
                 <option key={lot} value={lot}>
                   {lot}
                 </option>
@@ -179,30 +142,30 @@ export default function PortalHistoryPage() {
                   </td>
                 </tr>
               ) : (
-                filteredHistory.map((entry) => (
+                filteredHistory.map((entry: any) => (
                   <tr key={entry.id} className="border-b border-slate-200 hover:bg-slate-50">
-                    <td className="px-6 py-4 text-slate-900">{entry.date}</td>
+                    <td className="px-6 py-4 text-slate-900">{new Date(entry.startDate).toLocaleDateString()}</td>
                     <td className="px-6 py-4 text-slate-600">
-                      {entry.startTime} – {entry.endTime}
+                      {new Date(entry.startDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} – {new Date(entry.endDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                       <p className="font-semibold text-slate-900">{entry.lot}</p>
                       <p className="text-xs text-slate-500">Space {entry.space}</p>
                     </td>
-                    <td className="px-6 py-4 text-slate-600">{entry.vehicle}</td>
-                    <td className="px-6 py-4 text-slate-600">{entry.duration} hrs</td>
+                    <td className="px-6 py-4 text-slate-600">{entry.vehicle?.licensePlate || "N/A"}</td>
+                    <td className="px-6 py-4 text-slate-600">{Math.round((new Date(entry.endDate).getTime() - new Date(entry.startDate).getTime()) / (1000 * 60 * 60) * 10) / 10} hrs</td>
                     <td className="px-6 py-4 text-right font-semibold text-slate-900">
-                      ₱{entry.amount}
+                      ₱{Math.round((new Date(entry.endDate).getTime() - new Date(entry.startDate).getTime()) / (1000 * 60 * 60) * 40 * 100) / 100}
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${
-                          entry.status === "completed"
+                          entry.status === "COMPLETED"
                             ? "bg-emerald-100 text-emerald-700"
                             : "bg-slate-100 text-slate-600"
                         }`}
                       >
-                        {entry.status === "completed" ? "Completed" : "Cancelled"}
+                        {entry.status === "COMPLETED" ? "Completed" : entry.status}
                       </span>
                     </td>
                   </tr>
