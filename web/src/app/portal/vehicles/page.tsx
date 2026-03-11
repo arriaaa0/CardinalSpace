@@ -67,7 +67,7 @@ export default function PortalVehiclesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Your Vehicles</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-slate-700">
             Add and manage vehicles for your parking reservations
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function PortalVehiclesPage() {
       <div className="grid gap-4">
         {vehicles.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-            <p className="text-slate-600">No vehicles added yet. Add one to get started!</p>
+            <p className="text-slate-700">No vehicles added yet. Add one to get started!</p>
           </div>
         ) : (
           vehicles.map((vehicle) => (
@@ -166,7 +166,7 @@ export default function PortalVehiclesPage() {
                 <p className="font-semibold text-slate-900">
                   {vehicle.year} {vehicle.make} {vehicle.model}
                 </p>
-                <p className="text-sm text-slate-600">{vehicle.plate}</p>
+                <p className="text-sm text-slate-700">{vehicle.plate}</p>
                 <p className="text-xs text-slate-500">{vehicle.color}</p>
               </div>
               <button

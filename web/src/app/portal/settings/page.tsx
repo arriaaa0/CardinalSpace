@@ -1,29 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from "react"
+import { getCurrentUser } from "@/lib/auth"
 
 export default function PortalSettingsPage() {
+  const [user, setUser] = useState<any>(null)
   const [formData, setFormData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'jude@doe.example.com',
-    phone: '+63 917 123 4567',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
-
   const [notifications, setNotifications] = useState({
     reservationReminders: true,
     paymentConfirmations: true,
     emailNotifications: true,
-    smsNotifications: false,
+    smsNotifications: false
   });
 
   const [paymentMethods, setPaymentMethods] = useState([
-    { id: 1, type: 'card', brand: 'Mastercard', last4: '7800' },
-    { id: 2, type: 'gcash', label: 'GCash' },
+    { id: 1, type: 'card', brand: 'Visa', last4: '4242' },
+    { id: 2, type: 'gcash', label: 'GCash' }
   ]);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await getCurrentUser()
+        setUser(currentUser)
+        if (currentUser) {
+          setFormData({
+            firstName: (currentUser as any).name || '',
+            lastName: '',
+            email: (currentUser as any).email || '',
+            phone: '',
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load user:", error)
+      }
+    }
+    loadUser()
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,7 +85,7 @@ export default function PortalSettingsPage() {
     <div className="min-h-screen bg-slate-50 pb-8">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Account & Settings</h1>
-        <p className="mt-1 text-sm text-slate-600">Manage your profile, security, and preferences</p>
+        <p className="mt-1 text-sm text-slate-700">Manage your profile, security, and preferences</p>
       </header>
 
       {/* Your Account Section */}
@@ -71,11 +95,11 @@ export default function PortalSettingsPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-rose-600 text-xl font-bold text-white">
-              JD
+              {(user?.name || 'U').toString().charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="font-semibold text-slate-900">John Doe</p>
-              <p className="text-sm text-slate-600">john@example.com</p>
+              <p className="font-semibold text-slate-900">{user?.name || 'User'}</p>
+              <p className="text-sm text-slate-700">{user?.email || 'user@example.com'}</p>
             </div>
           </div>
           <button className="text-sm font-medium text-rose-600 hover:text-rose-700">Edit</button>
@@ -202,7 +226,7 @@ export default function PortalSettingsPage() {
             <div key={key} className="flex items-center justify-between border-b border-slate-200 pb-4 last:border-b-0">
               <div>
                 <p className="font-medium text-slate-900">{label}</p>
-                <p className="text-sm text-slate-600">{description}</p>
+                <p className="text-sm text-slate-700">{description}</p>
               </div>
               <button
                 onClick={() => handleNotificationToggle(key as keyof typeof notifications)}
@@ -234,7 +258,7 @@ export default function PortalSettingsPage() {
                     <div className="text-2xl">💳</div>
                     <div>
                       <p className="font-medium text-slate-900">{method.brand}</p>
-                      <p className="text-sm text-slate-600">ending in {method.last4}</p>
+                      <p className="text-sm text-slate-700">ending in {method.last4}</p>
                     </div>
                   </>
                 )}

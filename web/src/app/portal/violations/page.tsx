@@ -87,7 +87,7 @@ export default function PortalViolationsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold text-slate-900">Violations & Appeals</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-slate-700">
           View your violations, appeal status, and manage payments
         </p>
       </div>
@@ -99,10 +99,10 @@ export default function PortalViolationsPage() {
           {isLoading ? (
             <div className="py-8 text-center">
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-rose-900"></div>
-              <p className="mt-4 text-sm text-slate-600">Loading violations...</p>
+              <p className="mt-4 text-sm text-slate-700">Loading violations...</p>
             </div>
           ) : violations.length === 0 ? (
-            <p className="text-sm text-slate-600">No violations recorded.</p>
+            <p className="text-sm text-slate-700">No violations recorded.</p>
           ) : (
             violations.map((v) => {
               const hasAppeal = appeals.some((a) => a.violationId === v.id);
@@ -118,9 +118,9 @@ export default function PortalViolationsPage() {
                       </span>
                       <p className="font-semibold text-slate-900">{v.type}</p>
                     </div>
-                    <p className="text-sm text-slate-600">{v.date} at {v.time}</p>
-                    <p className="text-sm text-slate-600">{v.lot}</p>
-                    <p className="text-sm text-slate-600">{v.description}</p>
+                    <p className="text-sm text-slate-700">{v.date} at {v.time}</p>
+                    <p className="text-sm text-slate-700">{v.lot}</p>
+                    <p className="text-sm text-slate-700">{v.description}</p>
                   </div>
                   <div className="text-right ml-4">
                     <p className="font-semibold text-slate-900">₱{v.amount}</p>
@@ -159,8 +159,8 @@ export default function PortalViolationsPage() {
                     {a.status.toUpperCase()}
                   </span>
                 </div>
-                <p className="text-sm text-slate-600 mb-2">Reason: {a.reason}</p>
-                {a.evidence && <p className="text-sm text-slate-600">Evidence: {a.evidence}</p>}
+                <p className="text-sm text-slate-700 mb-2">Reason: {a.reason}</p>
+                {a.evidence && <p className="text-sm text-slate-700">Evidence: {a.evidence}</p>}
               </div>
             ))}
           </div>

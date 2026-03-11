@@ -111,7 +111,7 @@ export default function PortalReservationsPage() {
         </header>
 
         <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg p-4 border-2 border-rose-200">
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-slate-700 mb-4">
             Select a payment method to process your reservation
           </p>
           <div className="space-y-3">
@@ -169,7 +169,7 @@ export default function PortalReservationsPage() {
           <div className="flex items-start justify-between mb-3">
             <div>
               <p className="font-semibold text-slate-900">{selectedLotData.name}</p>
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="text-sm text-slate-700 mt-1">
                 Available: {selectedLotData.available}/{selectedLotData.total} spaces
               </p>
             </div>
@@ -184,7 +184,7 @@ export default function PortalReservationsPage() {
             <p className="text-sm font-semibold text-slate-900 mb-1">Selected Space</p>
             <p className="text-lg font-bold text-rose-700">{selectedSpace}</p>
           </div>
-          <div className="mt-3 text-sm text-slate-600">
+          <div className="mt-3 text-sm text-slate-700">
             Rate: <span className="font-semibold text-rose-700">₱{selectedLotData.hourlyRate}/hour</span>
           </div>
         </div>
@@ -233,7 +233,7 @@ export default function PortalReservationsPage() {
 
           {/* Duration */}
           <div className="bg-slate-50 rounded-lg p-3">
-            <p className="text-sm text-slate-600">Duration</p>
+            <p className="text-sm text-slate-700">Duration</p>
             <p className="text-lg font-bold text-slate-900">{duration.toFixed(1)} hours</p>
           </div>
         </div>
@@ -259,29 +259,29 @@ export default function PortalReservationsPage() {
           <h2 className="font-semibold text-slate-900 mb-3">Reservation Summary</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-600">Parking Lot</span>
+              <span className="text-slate-700">Parking Lot</span>
               <span className="font-semibold text-slate-900">{selectedLotData.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Space</span>
+              <span className="text-slate-700">Space</span>
               <span className="font-semibold text-slate-900">{selectedSpace}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Date</span>
+              <span className="text-slate-700">Date</span>
               <span className="font-semibold text-slate-900">{startDate}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Time</span>
+              <span className="text-slate-700">Time</span>
               <span className="font-semibold text-slate-900">{startTime} - {endTime}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Vehicle</span>
+              <span className="text-slate-700">Vehicle</span>
               <span className="font-semibold text-slate-900">
                 {VEHICLES.find((v) => v.id === selectedVehicle)?.plate}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Duration</span>
+              <span className="text-slate-700">Duration</span>
               <span className="font-semibold text-slate-900">{duration.toFixed(1)} hours</span>
             </div>
             <div className="border-t border-rose-300 pt-2 mt-2 flex justify-between">
@@ -315,7 +315,7 @@ export default function PortalReservationsPage() {
           <h1 className="text-2xl font-semibold text-slate-900">
             My Reservations
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-slate-700">
             View and manage your parking reservations
           </p>
         </div>
@@ -347,13 +347,13 @@ export default function PortalReservationsPage() {
               <div className="mb-4 flex items-start justify-between">
                 <div>
                   <p className="font-semibold text-slate-900">{res.lot}</p>
-                  <p className="text-sm text-slate-600 mt-1">Space {res.space}</p>
+                  <p className="text-sm text-slate-700 mt-1">Space {res.space}</p>
                 </div>
                 <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                   {res.status === "active" ? "Active" : "Upcoming"}
                 </span>
               </div>
-              <div className="space-y-2 mb-4 text-sm text-slate-600">
+              <div className="space-y-2 mb-4 text-sm text-slate-700">
                 <p>
                   <span className="font-semibold">Start:</span> {res.startDate}
                 </p>
