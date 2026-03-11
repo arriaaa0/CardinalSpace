@@ -42,8 +42,15 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
   };
 
   const handleSignOut = async () => {
-    await removeAuthCookie();
-    router.push("/");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Fallback to removing cookie directly
+      await removeAuthCookie();
+      router.push("/");
+    }
   };
 
   // For public routes, render without auth check

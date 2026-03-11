@@ -13,6 +13,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [adminUser, setAdminUser] = useState<any>(null);
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   // Allow admin login page without auth
   const isLoginPage = pathname === "/admin/login";
 
@@ -111,12 +121,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   <p className="text-slate-500">System Administrator</p>
                 </div>
               </div>
-              <Link
-                href="/admin/login"
+              <button
+                onClick={handleLogout}
                 className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:border-rose-300 hover:text-rose-800"
               >
                 Logout
-              </Link>
+              </button>
             </div>
           </div>
         </header>
