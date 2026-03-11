@@ -40,7 +40,7 @@ export async function GET() {
     ])
 
     // Generate notifications from real data
-    const notifications = []
+    const notifications: any[] = []
 
     // Permit notifications
     permits.forEach(permit => {

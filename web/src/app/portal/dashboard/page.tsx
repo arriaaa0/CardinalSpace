@@ -270,6 +270,20 @@ function NotificationRow({ title, time, type }: { title: string; time: string; t
     }
   };
 
+  const formatTime = (timeString: string) => {
+    const time = new Date(timeString);
+    const now = new Date();
+    const diffMs = now.getTime() - time.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hr ago`;
+    return `${diffDays} day ago`;
+  };
+
   return (
     <div className="flex items-start gap-3">
       <div className={`mt-1 h-6 w-6 rounded-full ${getDotColor()}`} />

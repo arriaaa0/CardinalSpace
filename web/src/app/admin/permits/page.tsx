@@ -157,7 +157,7 @@ export default function AdminPermitsPage() {
                       <StatusPill status={app.status} />
                     </td>
                     <td className="rounded-r-xl bg-slate-50 px-3 py-2 text-right">
-                      {app.status === "Pending" ? (
+                      {app.status === "PENDING" ? (
                         <div className="inline-flex gap-1">
                           <button 
                             onClick={() => handleApprove(app.userId)}
@@ -187,10 +187,10 @@ export default function AdminPermitsPage() {
   );
 }
 
-type Status = "Pending" | "Approved" | "Denied";
+type Status = "PENDING" | "APPROVED" | "REJECTED";
 
 function StatusPill({ status }: { status: Status }) {
-  if (status === "Approved") {
+  if (status === "APPROVED") {
     return (
       <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
         Approved
@@ -198,10 +198,10 @@ function StatusPill({ status }: { status: Status }) {
     );
   }
 
-  if (status === "Denied") {
+  if (status === "REJECTED") {
     return (
       <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
-        Denied
+        Rejected
       </span>
     );
   }
