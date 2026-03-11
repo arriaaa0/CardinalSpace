@@ -80,13 +80,58 @@ export async function POST(request: NextRequest) {
     // Login
     const user = await prisma.user.findUnique({ where: { email } })
     if (!user || !user.password) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      return NextResponse.json({ error: 'Account not found. Please register first.' }, { status: 401 })
+    }
+
+    // Check if account is locked
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      const remainingMinutes = Math.ceil((user.lockedUntil.getTime() - Date.now()) / (1000 * 60))
+      return NextResponse.json({ 
+        error: `Too many failed attempts. Account locked for ${remainingMinutes} minutes.`,
+        lockedUntil: user.lockedUntil 
+      }, { status: 423 })
     }
 
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      // Increment failed login attempts
+      const failedAttempts = user.failedLoginAttempts + 1
+      
+      if (failedAttempts >= 3) {
+        // Lock account for 15 minutes
+        const lockedUntil = new Date(Date.now() + 15 * 60 * 1000)
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { 
+            failedLoginAttempts: failedAttempts,
+            lockedUntil 
+          }
+        })
+        return NextResponse.json({ 
+          error: 'Too many failed attempts. Account locked for 15 minutes.',
+          lockedUntil 
+        }, { status: 423 })
+      } else {
+        // Update failed attempts
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { failedLoginAttempts: failedAttempts }
+        })
+        return NextResponse.json({ 
+          error: 'Invalid credentials. Please check your email and password.',
+          attemptsRemaining: 3 - failedAttempts
+        }, { status: 401 })
+      }
     }
+
+    // Reset failed attempts on successful login
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { 
+        failedLoginAttempts: 0,
+        lockedUntil: null 
+      }
+    })
 
     const token = await createToken(user.id, user.email, user.name || '', user.role)
     
