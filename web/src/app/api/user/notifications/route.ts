@@ -69,7 +69,7 @@ export async function GET() {
         id: `violation-${violation.id}`,
         title: `New violation issued: ${violation.type}`,
         description: `Fine: ₱${violation.fine} - ${violation.description}`,
-        time: new Date(violation.issuedAt).toLocaleString(),
+        time: new Date(violation.issuedAt || violation.createdAt || Date.now()).toLocaleString(),
         type: "warning"
       })
     })
@@ -81,7 +81,7 @@ export async function GET() {
           id: `appeal-${appeal.id}`,
           title: "Your appeal has been approved",
           description: `Violation ${appeal.violationId} penalty has been waived`,
-          time: new Date(appeal.updatedAt || appeal.createdAt).toLocaleString(),
+          time: new Date(appeal.updatedAt || appeal.createdAt || Date.now()).toLocaleString(),
           type: "success"
         })
       } else if (appeal.status === "DENIED") {
@@ -89,7 +89,7 @@ export async function GET() {
           id: `appeal-${appeal.id}`,
           title: "Your appeal has been denied",
           description: `Violation ${appeal.violationId} penalty still applies`,
-          time: new Date(appeal.updatedAt || appeal.createdAt).toLocaleString(),
+          time: new Date(appeal.updatedAt || appeal.createdAt || Date.now()).toLocaleString(),
           type: "error"
         })
       }

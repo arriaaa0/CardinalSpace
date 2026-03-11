@@ -28,6 +28,7 @@ export default function PortalViolationsPage() {
 
   useEffect(() => {
     fetchViolations();
+    fetchUserAppeals();
   }, []);
 
   const fetchViolations = async () => {
@@ -52,22 +53,47 @@ export default function PortalViolationsPage() {
     evidence: "",
   });
 
-  const handleSubmitAppeal = (e: React.FormEvent) => {
+  const fetchUserAppeals = async () => {
+    try {
+      const response = await fetch("/api/user/appeals");
+      if (response.ok) {
+        const data = await response.json();
+        setAppeals(data.appeals || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch appeals:", error);
+    }
+  };
+
+  const handleSubmitAppeal = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedViolation && appealData.reason) {
-      setAppeals([
-        ...appeals,
-        {
-          id: `A${appeals.length + 1}`,
-          violationId: selectedViolation,
-          reason: appealData.reason,
-          evidence: appealData.evidence,
-          status: "pending",
-        },
-      ]);
-      setAppealData({ reason: "", evidence: "" });
-      setShowAppealForm(false);
-      setSelectedViolation(null);
+      try {
+        const response = await fetch("/api/user/appeals", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            violationId: selectedViolation, 
+            reason: appealData.reason,
+            evidence: appealData.evidence 
+          }),
+        });
+        
+        if (response.ok) {
+          alert("Appeal submitted successfully!");
+          // Refresh appeals list
+          fetchUserAppeals();
+          setAppealData({ reason: "", evidence: "" });
+          setShowAppealForm(false);
+          setSelectedViolation(null);
+        } else {
+          const data = await response.json();
+          alert(data.error || "Failed to submit appeal");
+        }
+      } catch (error) {
+        console.error("Failed to submit appeal:", error);
+        alert("Failed to submit appeal");
+      }
     }
   };
 
@@ -191,7 +217,7 @@ export default function PortalViolationsPage() {
                 placeholder="Explain why you believe this violation is incorrect..."
                 required
                 rows={4}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-rose-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-100"
               />
             </div>
             <div>
@@ -201,7 +227,7 @@ export default function PortalViolationsPage() {
                 value={appealData.evidence}
                 onChange={(e) => setAppealData({ ...appealData, evidence: e.target.value })}
                 placeholder="e.g., Receipt, photo, permit number, etc."
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-rose-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-100"
               />
             </div>
             <div className="flex gap-3">

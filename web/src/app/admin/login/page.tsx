@@ -53,8 +53,8 @@ export default function AdminLoginPage() {
         </div>
       </div>
 
-      {/* Centered login card overlapping header */}
-      <div className="-mt-8 flex flex-1 items-start justify-center px-4 pb-12">
+      {/* Centered login card in white area */}
+      <div className="mt-8 flex flex-1 items-start justify-center px-4 pb-12">
         <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
           <header className="mb-6 text-center">
             <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
