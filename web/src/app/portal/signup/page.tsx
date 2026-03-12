@@ -154,7 +154,7 @@ export default function PortalSignupPage() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Full Name
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="text"
                     name="name"
@@ -170,7 +170,7 @@ export default function PortalSignupPage() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Email
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="email"
                     name="email"
@@ -204,7 +204,7 @@ export default function PortalSignupPage() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Vehicle Plate Number
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="text"
                     name="vehiclePlate"
@@ -221,7 +221,7 @@ export default function PortalSignupPage() {
                   <label className="block text-xs font-semibold text-slate-700">
                     Vehicle Make
                   </label>
-                  <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                  <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                     <input
                       type="text"
                       name="vehicleMake"
@@ -237,7 +237,7 @@ export default function PortalSignupPage() {
                   <label className="block text-xs font-semibold text-slate-700">
                     Vehicle Model
                   </label>
-                  <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                  <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                     <input
                       type="text"
                       name="vehicleModel"
@@ -254,7 +254,7 @@ export default function PortalSignupPage() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Password
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="password"
                     name="password"
@@ -299,7 +299,7 @@ export default function PortalSignupPage() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Confirm Password
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="password"
                     name="confirmPassword"

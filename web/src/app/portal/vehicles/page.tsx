@@ -91,7 +91,7 @@ export default function PortalVehiclesPage() {
                 onChange={handleInputChange}
                 placeholder="e.g., Toyota"
                 required
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:outline-none"
               />
             </div>
             <div>
@@ -103,7 +103,7 @@ export default function PortalVehiclesPage() {
                 onChange={handleInputChange}
                 placeholder="e.g., Camry"
                 required
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:outline-none"
               />
             </div>
             <div>
@@ -115,7 +115,7 @@ export default function PortalVehiclesPage() {
                 onChange={handleInputChange}
                 min="1990"
                 max={new Date().getFullYear()}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:outline-none"
               />
             </div>
             <div>
@@ -126,7 +126,7 @@ export default function PortalVehiclesPage() {
                 value={formData.color}
                 onChange={handleInputChange}
                 placeholder="e.g., Silver"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:outline-none"
               />
             </div>
             <div className="md:col-span-2">
@@ -138,7 +138,7 @@ export default function PortalVehiclesPage() {
                 onChange={handleInputChange}
                 placeholder="e.g., ABC 1234"
                 required
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:outline-none"
               />
             </div>
           </div>

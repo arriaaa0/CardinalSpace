@@ -119,7 +119,7 @@ export default function PortalSettingsPage() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
               />
             </div>
             <div>
@@ -129,7 +129,7 @@ export default function PortalSettingsPage() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function PortalSettingsPage() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 
@@ -152,7 +152,7 @@ export default function PortalSettingsPage() {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 
@@ -177,7 +177,7 @@ export default function PortalSettingsPage() {
               name="currentPassword"
               value={formData.currentPassword}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 
@@ -188,7 +188,7 @@ export default function PortalSettingsPage() {
               name="newPassword"
               value={formData.newPassword}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 
@@ -199,7 +199,7 @@ export default function PortalSettingsPage() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 

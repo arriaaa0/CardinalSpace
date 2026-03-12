@@ -73,7 +73,7 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
                 <label className="block text-xs font-semibold text-slate-700">
                   Email
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="email"
                     value={email}
@@ -88,7 +88,7 @@ const response = await fetch("/api/auth/[...nextauth]?action=login", {
                 <label className="block text-xs font-semibold text-slate-700">
                   Password
                 </label>
-                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
+                <div className="mt-1 flex items-center rounded-full border border-rose-200 bg-rose-50/40 px-3 py-2 text-sm text-slate-900 shadow-sm focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-100">
                   <input
                     type="password"
                     value={password}
