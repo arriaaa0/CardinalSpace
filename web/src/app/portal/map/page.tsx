@@ -203,29 +203,45 @@ export default function PortalMapPage() {
 
         {showFilters && (
           <div className="space-y-4">
-            {/* Location Filter */}
+            {/* Area Filter within {activeLot} */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Location
+                Area in {activeLot}
               </label>
               <select
                 value={filters.location}
                 onChange={(e) => setFilters({...filters, location: e.target.value})}
                 className="w-full px-3 py-2 text-sm text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
               >
-                <option value="">All Locations</option>
-                <option value="Main Building">Main Building</option>
-                <option value="Library">Library</option>
-                <option value="Cafeteria">Cafeteria</option>
-                <option value="Engineering Building">Engineering Building</option>
-                <option value="Labs">Labs</option>
-                <option value="Parking Exit">Parking Exit</option>
-                <option value="Student Center">Student Center</option>
-                <option value="Gym">Gym</option>
-                <option value="Sports Complex">Sports Complex</option>
-                <option value="Admin Building">Admin Building</option>
-                <option value="Auditorium">Auditorium</option>
-                <option value="Parking Entrance">Parking Entrance</option>
+                <option value="">All Areas</option>
+                {activeLot === 'A' && (
+                  <>
+                    <option value="Near Entrance">Near Entrance</option>
+                    <option value="Center Area">Center Area</option>
+                    <option value="Back Section">Back Section</option>
+                  </>
+                )}
+                {activeLot === 'B' && (
+                  <>
+                    <option value="Near Elevator">Near Elevator</option>
+                    <option value="Side Section">Side Section</option>
+                    <option value="Far End">Far End</option>
+                  </>
+                )}
+                {activeLot === 'C' && (
+                  <>
+                    <option value="Premium Spots">Premium Spots</option>
+                    <option value="Regular Area">Regular Area</option>
+                  </>
+                )}
+                {activeLot === 'D' && (
+                  <>
+                    <option value="North Section">North Section</option>
+                    <option value="South Section">South Section</option>
+                    <option value="East Section">East Section</option>
+                    <option value="West Section">West Section</option>
+                  </>
+                )}
               </select>
             </div>
 
