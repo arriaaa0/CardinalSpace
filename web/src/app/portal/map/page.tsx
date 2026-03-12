@@ -8,28 +8,28 @@ const LOTS = {
     name: "Lot A - Ground Floor",
     rows: 5,
     cols: 20,
-    available: 24,
+    available: 65,
     total: 100,
   },
   B: {
     name: "Lot B - Basement 1",
     rows: 5,
     cols: 20,
-    available: 35,
+    available: 58,
     total: 100,
   },
   C: {
     name: "Lot C - Basement 1",
     rows: 4,
     cols: 20,
-    available: 8,
+    available: 42,
     total: 100,
   },
   D: {
     name: "Lot D - Basement 2",
     rows: 5,
     cols: 20,
-    available: 64,
+    available: 72,
     total: 100,
   },
 };
@@ -392,15 +392,15 @@ export default function PortalMapPage() {
           <div className="flex gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded bg-emerald-500"></div>
-              <span>Available</span>
+              <span className="text-slate-900">Available</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded bg-slate-300"></div>
-              <span>Occupied</span>
+              <span className="text-slate-900">Occupied</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded border-2 border-rose-600"></div>
-              <span>Selected</span>
+              <span className="text-slate-900">Selected</span>
             </div>
           </div>
         </div>
@@ -422,14 +422,14 @@ export default function PortalMapPage() {
                       )
                     }
                     disabled={!space.available || isFilteredOut}
-                    className={`h-10 w-10 rounded text-xs font-semibold transition-all relative ${
+                    className={`h-10 w-10 rounded text-xs font-bold transition-all relative ${
                       isSelected
-                        ? "border-2 border-rose-600 bg-rose-100"
+                        ? "border-2 border-rose-600 bg-rose-100 text-rose-900"
                         : isFilteredOut
-                        ? "bg-slate-200 text-slate-400 cursor-not-allowed opacity-40"
+                        ? "bg-slate-200 text-slate-600 cursor-not-allowed opacity-40"
                         : space.available
-                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 cursor-pointer"
-                        : "bg-slate-300 text-slate-500 cursor-not-allowed opacity-60"
+                        ? "bg-emerald-100 text-emerald-900 hover:bg-emerald-200 cursor-pointer"
+                        : "bg-slate-300 text-slate-700 cursor-not-allowed opacity-60"
                     }`}
                     title={`Space ${space.number} - ${
                       isFilteredOut 
@@ -462,31 +462,31 @@ export default function PortalMapPage() {
           <div className="mt-4 flex flex-wrap gap-4 text-xs">
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded bg-emerald-500"></div>
-              <span>Available</span>
+              <span className="text-slate-900">Available</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded bg-slate-300"></div>
-              <span>Occupied</span>
+              <span className="text-slate-900">Occupied</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded border-2 border-rose-600"></div>
-              <span>Selected</span>
+              <span className="text-slate-900">Selected</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded bg-slate-200 opacity-40"></div>
-              <span>Filtered Out</span>
+              <span className="text-slate-900">Filtered Out</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span>♿ Accessible</span>
+              <span className="text-slate-900">♿ Accessible</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <span>⚡ EV Charging</span>
+              <span className="text-slate-900">⚡ EV Charging</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span>🏢 Covered</span>
+              <span className="text-slate-900">🏢 Covered</span>
             </div>
           </div>
         </div>
