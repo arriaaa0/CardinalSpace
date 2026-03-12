@@ -90,7 +90,7 @@ export default function PortalVehiclesPage() {
   };
 
   const handleDeleteVehicle = async (id: string) => {
-    if (confirm("Are you sure you want to delete this vehicle?")) {
+    if (confirm("Are you sure you want to delete this vehicle? This action cannot be undone and will remove the vehicle from all your permits and reservations.")) {
       try {
         const response = await fetch(`/api/user/vehicles/${id}`, {
           method: "DELETE"

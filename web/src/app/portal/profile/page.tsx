@@ -159,8 +159,13 @@ export default function PortalProfilePage() {
               <h2 className="text-lg font-semibold text-slate-900">Personal Information</h2>
               <button
                 onClick={() => {
-                  setEditMode(!editMode)
-                  if (!editMode) {
+                  if (editMode) {
+                    if (confirm("Are you sure you want to cancel editing? All unsaved changes will be lost.")) {
+                      setEditMode(false)
+                      setFormData(prev => ({ ...prev, name: user.name || "" }))
+                    }
+                  } else {
+                    setEditMode(true)
                     setFormData(prev => ({ ...prev, name: user.name || "" }))
                   }
                 }}
@@ -239,8 +244,10 @@ export default function PortalProfilePage() {
                   </button>
                   <button
                     onClick={() => {
-                      setEditMode(false)
-                      setFormData(prev => ({ ...prev, currentPassword: "", newPassword: "", confirmPassword: "" }))
+                      if (confirm("Are you sure you want to cancel editing? All unsaved changes will be lost.")) {
+                        setEditMode(false)
+                        setFormData(prev => ({ ...prev, currentPassword: "", newPassword: "", confirmPassword: "" }))
+                      }
                     }}
                     className="rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >

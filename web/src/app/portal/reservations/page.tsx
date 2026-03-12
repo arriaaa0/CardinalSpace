@@ -143,20 +143,22 @@ export default function PortalReservationsPage() {
   };
 
   const handleCancelReservation = async (id: string) => {
-    try {
-      const response = await fetch(`/api/user/reservations/${id}`, {
-        method: "DELETE"
-      })
-      
-      if (response.ok) {
-        setReservations(reservations.filter((r) => r.id !== id));
-        alert("Reservation cancelled successfully!")
-      } else {
+    if (confirm("Are you sure you want to cancel this reservation? This action cannot be undone.")) {
+      try {
+        const response = await fetch(`/api/user/reservations/${id}`, {
+          method: "DELETE"
+        });
+        
+        if (response.ok) {
+          setReservations(reservations.filter((r) => r.id !== id));
+          alert("Reservation cancelled successfully!")
+        } else {
+          alert("Failed to cancel reservation")
+        }
+      } catch (error) {
+        console.error("Cancel reservation error:", error)
         alert("Failed to cancel reservation")
       }
-    } catch (error) {
-      console.error("Cancel reservation error:", error)
-      alert("Failed to cancel reservation")
     }
   };
 

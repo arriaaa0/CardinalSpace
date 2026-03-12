@@ -209,7 +209,13 @@ export default function PortalPermitsPage() {
                   {submitting ? "Submitting..." : "Submit Application"}
                 </button>
                 <button
-                  onClick={() => setShowApplication(false)}
+                  onClick={() => {
+                    if (confirm("Are you sure you want to cancel this permit application? All entered data will be lost.")) {
+                      setShowApplication(false);
+                      setSelectedVehicle("");
+                      setPermitType("STUDENT");
+                    }
+                  }}
                   className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
                 >
                   Cancel
