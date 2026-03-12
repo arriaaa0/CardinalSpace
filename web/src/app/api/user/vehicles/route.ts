@@ -85,3 +85,50 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("auth-token")?.value
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const secret = new TextEncoder().encode(
+      process.env.NEXTAUTH_SECRET || "e8f7g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8"
+    )
+    const verified = await jwtVerify(token, secret)
+    const userId = verified.payload.sub as string
+
+    const url = new URL(req.url)
+    const vehicleId = url.pathname.split('/').pop()
+
+    if (!vehicleId) {
+      return NextResponse.json({ error: "Vehicle ID required" }, { status: 400 })
+    }
+
+    // Check if vehicle belongs to user
+    const vehicle = await prisma.vehicle.findFirst({
+      where: { 
+        id: vehicleId,
+        userId 
+      }
+    })
+
+    if (!vehicle) {
+      return NextResponse.json({ error: "Vehicle not found" }, { status: 404 })
+    }
+
+    // Delete the vehicle
+    await prisma.vehicle.delete({
+      where: { id: vehicleId }
+    })
+
+    return NextResponse.json({ success: true })
+
+  } catch (error) {
+    console.error("Delete vehicle error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
