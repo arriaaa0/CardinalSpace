@@ -276,7 +276,7 @@ export default function PortalReservationsPage() {
                 <select
                   value={filters.location}
                   onChange={(e) => setFilters({...filters, location: e.target.value})}
-                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full px-2 py-1.5 text-sm text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
                 >
                   <option value="">All Locations</option>
                   <option value="Main Building">Main Building</option>
@@ -309,7 +309,7 @@ export default function PortalReservationsPage() {
                       onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                       className="mr-1"
                     />
-                    <span className="text-xs">All</span>
+                    <span className="text-xs text-slate-900">All</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -320,7 +320,7 @@ export default function PortalReservationsPage() {
                       onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                       className="mr-1"
                     />
-                    <span className="text-xs">Covered</span>
+                    <span className="text-xs text-slate-900">Covered</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -331,7 +331,7 @@ export default function PortalReservationsPage() {
                       onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                       className="mr-1"
                     />
-                    <span className="text-xs">Uncovered</span>
+                    <span className="text-xs text-slate-900">Uncovered</span>
                   </label>
                 </div>
               </div>

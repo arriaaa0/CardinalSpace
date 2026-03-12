@@ -198,7 +198,7 @@ export default function PortalMapPage() {
               <select
                 value={filters.location}
                 onChange={(e) => setFilters({...filters, location: e.target.value})}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 text-sm text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
               >
                 <option value="">All Locations</option>
                 <option value="Main Building">Main Building</option>
@@ -231,7 +231,7 @@ export default function PortalMapPage() {
                     onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                     className="mr-2"
                   />
-                  <span className="text-sm">All</span>
+                  <span className="text-sm text-slate-900">All</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -242,7 +242,7 @@ export default function PortalMapPage() {
                     onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                     className="mr-2"
                   />
-                  <span className="text-sm">Covered</span>
+                  <span className="text-sm text-slate-900">Covered</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -253,7 +253,7 @@ export default function PortalMapPage() {
                     onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
                     className="mr-2"
                   />
-                  <span className="text-sm">Uncovered</span>
+                  <span className="text-sm text-slate-900">Uncovered</span>
                 </label>
               </div>
             </div>
