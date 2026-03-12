@@ -71,14 +71,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "End time must be after start time" }, { status: 400 })
     }
 
-    // Check if user has an approved permit for school parking
-    // More flexible validation: permit just needs to be active during the reservation period
+    // Check if user has any approved permit (simplified for school parking)
     const userPermit = await prisma.permit.findFirst({
       where: { 
         userId,
-        status: "APPROVED",
-        startDate: { lte: end },    // Permit starts before or during reservation
-        endDate: { gte: start }     // Permit ends after or during reservation
+        status: "APPROVED"
       }
     })
 
