@@ -71,18 +71,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "End time must be after start time" }, { status: 400 })
     }
 
-    // Check if user has an approved permit
+    // Check if user has an approved permit for school parking
+    // More flexible validation: permit just needs to be active during the reservation period
     const userPermit = await prisma.permit.findFirst({
       where: { 
         userId,
         status: "APPROVED",
-        startDate: { lte: start },
-        endDate: { gte: end }
+        startDate: { lte: end },    // Permit starts before or during reservation
+        endDate: { gte: start }     // Permit ends after or during reservation
       }
     })
 
     if (!userPermit) {
-      return NextResponse.json({ error: "You need an approved permit to make reservations" }, { status: 400 })
+      return NextResponse.json({ 
+        error: "Parking permit required for reservations. Please apply for a permit through the Permits page and wait for admin approval.",
+        needsPermit: true
+      }, { status: 400 })
     }
 
     // Check for conflicting reservations

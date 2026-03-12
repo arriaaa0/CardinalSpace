@@ -30,6 +30,15 @@ export default function PortalReservationsPage() {
   const [loading, setLoading] = useState(false);
   const [showQRCode, setShowQRCode] = useState<string | null>(null);
   const [qrData, setQrData] = useState<any>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    location: "",
+    parkingType: "all", // all, covered, uncovered
+    accessibility: false,
+    evCharging: false,
+    permitCompatibility: true
+  });
+  const [permits, setPermits] = useState<any[]>([]);
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -47,6 +56,7 @@ export default function PortalReservationsPage() {
   useEffect(() => {
     fetchReservations();
     fetchVehicles();
+    fetchPermits();
   }, []);
 
   const fetchVehicles = async () => {
@@ -78,6 +88,44 @@ export default function PortalReservationsPage() {
     }
   };
 
+  const fetchPermits = async () => {
+    try {
+      const response = await fetch("/api/user/permits");
+      if (response.ok) {
+        const data = await response.json();
+        setPermits(data.permits || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch permits:", error);
+    }
+  };
+
+  const debugPermitValidation = async () => {
+    try {
+      const response = await fetch("/api/debug/permit-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startDate: `${startDate}T${startTime}`,
+          endDate: `${endDate}T${endTime}`
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log("Permit Validation Debug:", data);
+        alert(`Debug Results:\nUser: ${data.user?.email}\nTotal Permits: ${data.analysis?.totalPermits}\nApproved Permits: ${data.analysis?.approvedPermits}\nStrict Validation: ${data.validationResults?.strict}\nFlexible Validation: ${data.validationResults?.flexible}\nIssue: ${data.analysis?.issue}\n\nCheck console for full details.`);
+      } else {
+        alert(`Debug failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Debug error:", error);
+      alert("Debug error - check console");
+    }
+  };
+
+  
   const handleConfirmReservation = async () => {
     setLoading(true);
     try {
@@ -100,7 +148,11 @@ export default function PortalReservationsPage() {
         setStep("list");
         alert("Reservation created successfully!");
       } else {
-        alert(`Failed: ${data.error || "Unknown error"}`);
+        if (data.needsPermit) {
+          alert("You need an approved permit to make reservations. Please go to the Permits page to apply for one.");
+        } else {
+          alert(`Failed: ${data.error || "Unknown error"}`);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -210,6 +262,152 @@ export default function PortalReservationsPage() {
           </button>
           <h1 className="text-xl font-semibold text-slate-900">Reserve Parking</h1>
         </header>
+
+        {/* Search & Filter Panel */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-slate-200">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-slate-900 text-sm">Search & Filter</h3>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="text-rose-600 hover:text-rose-700 text-xs font-medium"
+            >
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
+          </div>
+
+          {showFilters && (
+            <div className="space-y-3">
+              {/* Location Filter */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Location
+                </label>
+                <select
+                  value={filters.location}
+                  onChange={(e) => setFilters({...filters, location: e.target.value})}
+                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                >
+                  <option value="">All Locations</option>
+                  <option value="Main Building">Main Building</option>
+                  <option value="Library">Library</option>
+                  <option value="Cafeteria">Cafeteria</option>
+                  <option value="Engineering Building">Engineering Building</option>
+                  <option value="Labs">Labs</option>
+                  <option value="Parking Exit">Parking Exit</option>
+                  <option value="Student Center">Student Center</option>
+                  <option value="Gym">Gym</option>
+                  <option value="Sports Complex">Sports Complex</option>
+                  <option value="Admin Building">Admin Building</option>
+                  <option value="Auditorium">Auditorium</option>
+                  <option value="Parking Entrance">Parking Entrance</option>
+                </select>
+              </div>
+
+              {/* Parking Type Filter */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Parking Type
+                </label>
+                <div className="flex gap-3">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="parkingType"
+                      value="all"
+                      checked={filters.parkingType === "all"}
+                      onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
+                      className="mr-1"
+                    />
+                    <span className="text-xs">All</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="parkingType"
+                      value="covered"
+                      checked={filters.parkingType === "covered"}
+                      onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
+                      className="mr-1"
+                    />
+                    <span className="text-xs">Covered</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="parkingType"
+                      value="uncovered"
+                      checked={filters.parkingType === "uncovered"}
+                      onChange={(e) => setFilters({...filters, parkingType: e.target.value})}
+                      className="mr-1"
+                    />
+                    <span className="text-xs">Uncovered</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Accessibility & EV Charging Filters */}
+              <div className="space-y-2">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={filters.accessibility}
+                    onChange={(e) => setFilters({...filters, accessibility: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <span className="text-xs font-medium text-slate-700">
+                    ♿ PWD Accessible Only
+                  </span>
+                </label>
+                
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={filters.evCharging}
+                    onChange={(e) => setFilters({...filters, evCharging: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <span className="text-xs font-medium text-slate-700">
+                    ⚡ EV Charging Only
+                  </span>
+                </label>
+                
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={filters.permitCompatibility}
+                    onChange={(e) => setFilters({...filters, permitCompatibility: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <span className="text-xs font-medium text-slate-700">
+                    🎫 Permit Compatible Only
+                  </span>
+                </label>
+              </div>
+
+              {/* Filter Actions */}
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="flex-1 bg-rose-600 text-white px-3 py-1.5 rounded-lg hover:bg-rose-700 transition-colors text-xs font-medium"
+                >
+                  Apply Filters
+                </button>
+                <button
+                  onClick={() => setFilters({
+                    location: "",
+                    parkingType: "all",
+                    accessibility: false,
+                    evCharging: false,
+                    permitCompatibility: true
+                  })}
+                  className="flex-1 bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-300 transition-colors text-xs font-medium"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Lot Selection */}
         <div className="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-slate-200">
@@ -373,6 +571,69 @@ export default function PortalReservationsPage() {
           + Reserve
         </button>
       </header>
+
+      {/* Permit Check Message */}
+      {permits.length === 0 && (
+        <div className="rounded-2xl border border-yellow-200 bg-yellow-50 p-6">
+          <div className="flex items-start gap-3">
+            <div className="text-yellow-600 mt-0.5">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-yellow-800 mb-1">Permit Required</h3>
+              <p className="text-sm text-yellow-700 mb-3">
+                You need an approved parking permit to make reservations.
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={debugPermitValidation}
+                  className="inline-flex items-center gap-1.5 bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+                >
+                  🔍 Debug Permit Issue
+                </button>
+                <a
+                  href="/portal/permits"
+                  className="inline-flex items-center gap-1.5 bg-yellow-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors"
+                >
+                  Apply for Permit
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+                <a
+                  href="/portal/vehicles"
+                  className="inline-flex items-center gap-1.5 bg-white text-yellow-700 border border-yellow-300 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-yellow-100 transition-colors"
+                >
+                  Add Vehicle
+                </a>
+              </div>
+              <p className="text-xs text-yellow-600 mt-2">
+                � Apply for a parking permit and wait for admin approval to make reservations
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {permits.length > 0 && permits.filter(p => p.status === "APPROVED").length === 0 && (
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <div className="flex items-start gap-3">
+            <div className="text-blue-600 mt-0.5">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-blue-800 mb-1">Permit Pending Approval</h3>
+              <p className="text-sm text-blue-700">
+                Your permit application is pending admin approval. You'll be able to make reservations once it's approved.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {reservations.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">

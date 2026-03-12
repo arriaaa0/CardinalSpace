@@ -49,3 +49,16 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Security - Credential files
+TEAM_CREDENTIALS*.md
+*_CREDENTIALS*.md
+*credentials*.md
+
+# Documentation - AI-generated files (optional)
+TECHNICAL_DOCUMENTATION.md
+USER_MANUAL.md
+
+# Development/Testing - Remove in production
+/src/app/api/setup/
+/src/app/api/debug/

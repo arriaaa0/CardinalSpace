@@ -88,6 +88,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
           <NavLink href="/portal/map" label="Real-time parking map" />
 
           <SectionLabel label="Parking" />
+          <NavLink href="/portal/permits" label="Permits" />
           <NavLink href="/portal/reservations" label="Active bookings" />
           <NavLink href="/portal/history" label="Parking & payments history" />
 
