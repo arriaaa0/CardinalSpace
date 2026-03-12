@@ -501,12 +501,7 @@ export default function PortalMapPage() {
               Go to reservations to complete your booking for this space
             </p>
             <Link
-              href="/portal/reservations"
-              onClick={() => {
-                // Store selected space in session storage for the reservations page
-                sessionStorage.setItem("selectedLot", lotKey);
-                sessionStorage.setItem("selectedSpace", selectedSpace);
-              }}
+              href={`/portal/reservations?lot=${activeLot}&space=${selectedSpace}`}
               className="inline-flex rounded-full bg-rose-800 px-6 py-2 text-sm font-semibold text-white hover:bg-rose-900"
             >
               Book Space {selectedSpace.split("-")[1]}

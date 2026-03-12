@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Modal from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 
@@ -59,6 +60,7 @@ const SPACES = {
 };
 
 export default function PortalReservationsPage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<"list" | "book" | "payment">("list");
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [selectedLot, setSelectedLot] = useState("C");
@@ -102,7 +104,17 @@ export default function PortalReservationsPage() {
     fetchReservations();
     fetchVehicles();
     fetchPermits();
-  }, []);
+    
+    // Check if coming from map with pre-selected lot and space
+    const lotParam = searchParams.get('lot');
+    const spaceParam = searchParams.get('space');
+    
+    if (lotParam && spaceParam) {
+      setSelectedLot(lotParam);
+      setSelectedSpace(spaceParam);
+      setStep("book"); // Go directly to booking step
+    }
+  }, [searchParams]);
 
   const fetchVehicles = async () => {
     try {
@@ -470,10 +482,8 @@ export default function PortalReservationsPage() {
             </div>
             <button
               onClick={() => {
-                // Reset selected space to force reselection
-                setSelectedSpace("");
-                // Optionally reset to list view to choose from map
-                setStep("list");
+                // Go back to map to select a different space
+                window.location.href = "/portal/map";
               }}
               className="text-rose-700 font-semibold text-sm hover:text-rose-800"
             >
