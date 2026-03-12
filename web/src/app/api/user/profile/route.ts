@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { jwtVerify } from "jose"
 import { cookies } from "next/headers"
 import bcrypt from "bcryptjs"
+import { createToken, setAuthCookie } from "@/lib/auth-actions"
 
 export async function GET() {
   try {
@@ -116,10 +117,17 @@ export async function PUT(req: NextRequest) {
       }
     })
 
+    // Create new JWT token with updated user data
+    const newToken = await createToken(updatedUser.id, updatedUser.email, updatedUser.name || "")
+    
+    // Set new auth cookie
+    await setAuthCookie(newToken)
+
     return NextResponse.json({
       success: true,
       message: "Profile updated successfully",
-      user: updatedUser
+      user: updatedUser,
+      token: newToken
     })
 
   } catch (error) {

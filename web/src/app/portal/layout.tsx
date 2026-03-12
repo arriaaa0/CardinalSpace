@@ -20,6 +20,18 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
     checkAuth();
   }, []);
 
+  // Re-check auth when user navigates between pages
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !loading) {
+        checkAuth();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [loading]);
+
   const checkAuth = async () => {
     // If it's a public route, don't check auth
     if (isPublicRoute) {

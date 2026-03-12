@@ -77,11 +77,7 @@ export default function PortalSettingsPage() {
       
       if (response.ok) {
         setUser(data.user)
-        // Force a page refresh to update the header name
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        modal.showAlert("Success", "Profile updated successfully! The page will refresh to update the header.", "success")
+        modal.showAlert("Success", "Profile updated successfully! Your changes are now reflected throughout the site.", "success")
       } else {
         modal.showAlert("Error", data.error || "Failed to update profile", "error")
       }
