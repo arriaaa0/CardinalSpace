@@ -27,11 +27,36 @@ A production-ready parking reservation and management system built with Next.js,
 
 ## Getting Started
 
+### Quick Setup (SQLite - Recommended for Development)
+
+For easy setup with SQLite (no database server needed):
+
+#### Windows:
+```bash
+setup.bat
+```
+
+#### Mac/Linux:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+#### Manual Setup:
+```bash
+npm install
+npx prisma generate
+npx prisma db push
+npm run dev
+```
+
+### Production Setup (PostgreSQL)
+
 ### 1. Install Dependencies
 
-``ash
+``bash
 npm install
-``
+```
 
 ### 2. Set Up Environment Variables
 
@@ -39,7 +64,7 @@ Copy .env.example to .env.local and fill in your values:
 
 ``bash
 cp .env.example .env.local
-``
+```
 
 Then edit .env.local:
 ```
@@ -58,13 +83,12 @@ Run Prisma migrations to set up your local database:
 ``bash
 npx prisma migrate dev
 ```
-``
 
 ### 4. Start Development Server
 
-``ash
+``bash
 npm run dev
-``
+```
 
 Open [http://localhost:3001](http://localhost:3001) in your browser.
 
