@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import Modal from "@/components/ui/modal";
+import { useModal } from "@/hooks/useModal";
 import { getCurrentUser } from "@/lib/auth"
 
 export default function PortalSettingsPage() {
   const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
+  const modal = useModal()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -58,31 +62,91 @@ export default function PortalSettingsPage() {
     setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    
+    try {
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`.trim()
+        })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setUser(data.user)
+        modal.showAlert("Success", "Profile updated successfully!", "success")
+      } else {
+        modal.showAlert("Error", data.error || "Failed to update profile", "error")
+      }
+    } catch (error) {
+      console.error("Profile update error:", error)
+      modal.showAlert("Error", "Failed to update profile", "error")
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.newPassword !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      modal.showAlert("Error", "Passwords do not match", "error");
       return;
     }
-    alert('Password changed successfully');
-    setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
+    
+    if (formData.newPassword.length < 8) {
+      modal.showAlert("Error", "Password must be at least 8 characters long", "error");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: formData.currentPassword,
+          newPassword: formData.newPassword
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        modal.showAlert("Success", "Password changed successfully!", "success");
+        setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
+      } else {
+        modal.showAlert("Error", data.error || "Failed to change password", "error");
+      }
+    } catch (error) {
+      console.error("Password change error:", error);
+      modal.showAlert("Error", "Failed to change password", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Profile updated successfully');
-  };
-
-  const handleAddPaymentMethod = () => {
-    alert('Payment method addition coming soon');
-  };
-
-  const handleRemovePaymentMethod = (id: number) => {
-    setPaymentMethods(prev => prev.filter(method => method.id !== id));
-  };
-
+  
   return (
     <div className="min-h-screen bg-slate-50 pb-8">
+      {/* Custom Modal */}
+      <Modal
+        isOpen={modal.modal.isOpen}
+        onClose={modal.closeModal}
+        title={modal.modal.title}
+        message={modal.modal.message}
+        type={modal.modal.type}
+        onConfirm={modal.modal.onConfirm}
+        confirmText={modal.modal.confirmText}
+        cancelText={modal.modal.cancelText}
+      />
+
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Account & Settings</h1>
         <p className="mt-1 text-sm text-slate-700">Manage your profile, security, and preferences</p>
@@ -158,7 +222,7 @@ export default function PortalSettingsPage() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-rose-600 py-2 text-sm font-semibold text-white hover:bg-rose-700 sm:w-auto"
+            className="w-full rounded-lg bg-rose-600 px-6 py-3 text-sm font-semibold text-white hover:bg-rose-700 sm:w-auto transition-colors"
           >
             Save Changes
           </button>
@@ -205,7 +269,7 @@ export default function PortalSettingsPage() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-rose-600 py-2 text-sm font-semibold text-white hover:bg-rose-700 sm:w-auto"
+            className="w-full rounded-lg bg-rose-600 px-6 py-3 text-sm font-semibold text-white hover:bg-rose-700 sm:w-auto transition-colors"
           >
             Update Password
           </button>
@@ -272,7 +336,6 @@ export default function PortalSettingsPage() {
                 )}
               </div>
               <button
-                onClick={() => handleRemovePaymentMethod(method.id)}
                 className="text-sm text-red-600 hover:text-red-700 font-medium"
               >
                 Remove
@@ -282,7 +345,7 @@ export default function PortalSettingsPage() {
         </div>
 
         <button
-          onClick={handleAddPaymentMethod}
+          onClick={() => modal.showAlert("Info", "Payment method addition coming soon!", "alert")}
           className="mt-4 w-full rounded-lg border border-rose-600 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50"
         >
           + Add Payment Method
