@@ -25,10 +25,7 @@ export default function PortalSettingsPage() {
     smsNotifications: false
   });
 
-  const [paymentMethods, setPaymentMethods] = useState([
-    { id: 1, type: 'card', brand: 'Visa', last4: '4242' },
-    { id: 2, type: 'gcash', label: 'GCash' }
-  ]);
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -36,9 +33,10 @@ export default function PortalSettingsPage() {
         const currentUser = await getCurrentUser()
         setUser(currentUser)
         if (currentUser) {
+          const nameParts = ((currentUser as any).name || '').split(' ');
           setFormData({
-            firstName: (currentUser as any).name || '',
-            lastName: '',
+            firstName: nameParts[0] || '',
+            lastName: nameParts.slice(1).join(' ') || '',
             email: (currentUser as any).email || '',
             phone: '',
             currentPassword: '',
@@ -79,7 +77,11 @@ export default function PortalSettingsPage() {
       
       if (response.ok) {
         setUser(data.user)
-        modal.showAlert("Success", "Profile updated successfully!", "success")
+        // Force a page refresh to update the header name
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        modal.showAlert("Success", "Profile updated successfully! The page will refresh to update the header.", "success")
       } else {
         modal.showAlert("Error", data.error || "Failed to update profile", "error")
       }
@@ -314,34 +316,24 @@ export default function PortalSettingsPage() {
         <h2 className="text-lg font-semibold text-slate-900">Linked Payment Methods</h2>
         
         <div className="space-y-3">
-          {paymentMethods.map(method => (
-            <div key={method.id} className="flex items-center justify-between border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-3">
-                {method.type === 'card' && (
-                  <>
-                    <div className="text-2xl">💳</div>
-                    <div>
-                      <p className="font-medium text-slate-900">{method.brand}</p>
-                      <p className="text-sm text-slate-700">ending in {method.last4}</p>
-                    </div>
-                  </>
-                )}
-                {method.type === 'gcash' && (
-                  <>
-                    <div className="text-2xl">💙</div>
-                    <div>
-                      <p className="font-medium text-slate-900">{method.label}</p>
-                    </div>
-                  </>
-                )}
-              </div>
-              <button
-                className="text-sm text-red-600 hover:text-red-700 font-medium"
-              >
-                Remove
-              </button>
+          {paymentMethods.length === 0 ? (
+            <div className="text-center py-8 border-2 border-dashed border-slate-300 rounded-lg">
+              <div className="text-3xl mb-3">💳</div>
+              <p className="text-slate-600 mb-2">No payment methods yet</p>
+              <p className="text-sm text-slate-500">Add a payment method to make reservations faster</p>
             </div>
-          ))}
+          ) : (
+            paymentMethods.map((method) => (
+              <div key={method.id} className="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">�</div>
+                  <div>
+                    <p className="font-medium text-slate-900">{method.brand} •••• {method.last4}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         <button
