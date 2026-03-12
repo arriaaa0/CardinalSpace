@@ -102,7 +102,7 @@ export default function PortalReservationsPage() {
 
   const debugPermitValidation = async () => {
     try {
-      const response = await fetch("/api/debug/permit-check", {
+      const response = await fetch("/api/debug/permit-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,9 +113,9 @@ export default function PortalReservationsPage() {
 
       const data = await response.json();
       
-      if (response.ok) {
+      if (data.success) {
         console.log("Permit Validation Debug:", data);
-        alert(`Debug Results:\nUser: ${data.user?.email}\nTotal Permits: ${data.analysis?.totalPermits}\nApproved Permits: ${data.analysis?.approvedPermits}\nStrict Validation: ${data.validationResults?.strict}\nFlexible Validation: ${data.validationResults?.flexible}\nIssue: ${data.analysis?.issue}\n\nCheck console for full details.`);
+        alert(`Debug Results:\nUser: ${data.user?.email}\nTotal Permits: ${data.analysis?.totalPermits}\nApproved Permits: ${data.analysis?.approvedPermits}\nCan Reserve: ${data.analysis?.canReserve ? 'YES' : 'NO'}\n\nCheck console for full permit details.`);
       } else {
         alert(`Debug failed: ${data.error}`);
       }
