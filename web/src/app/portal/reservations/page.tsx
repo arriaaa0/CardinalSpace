@@ -424,13 +424,16 @@ export default function PortalReservationsPage() {
                   Apply Filters
                 </button>
                 <button
-                  onClick={() => setFilters({
-                    location: "",
-                    parkingType: "all",
-                    accessibility: false,
-                    evCharging: false,
-                    permitCompatibility: true
-                  })}
+                  onClick={() => {
+                    setFilters({
+                      location: "",
+                      parkingType: "all",
+                      accessibility: false,
+                      evCharging: false,
+                      permitCompatibility: true
+                    });
+                    setShowFilters(false);
+                  }}
                   className="flex-1 bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-300 transition-colors text-xs font-medium"
                 >
                   Clear Filters

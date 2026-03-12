@@ -162,6 +162,8 @@ export default function PortalMapPage() {
       evCharging: false,
       permitCompatibility: true
     });
+    // Also hide filters after clearing
+    setShowFilters(false);
   };
 
   return (
