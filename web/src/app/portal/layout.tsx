@@ -11,6 +11,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Routes that don't require authentication
   const publicRoutes = ["/portal/login", "/portal/signup", "/portal/forgot-password"];
@@ -105,6 +106,43 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-gradient-to-b from-rose-900 via-rose-800 to-rose-700 px-4 py-6 transition-transform duration-300 ease-in-out md:hidden ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="mb-6">
+          <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto mb-2" />
+          <p className="mt-1 text-sm font-medium text-white">
+            User Portal
+          </p>
+        </div>
+        <nav className="space-y-1 text-sm">
+          <SectionLabel label="Overview" />
+          <MobileNavLink href="/portal/dashboard" label="Home dashboard" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/map" label="Real-time parking map" onClick={() => setSidebarOpen(false)} />
+
+          <SectionLabel label="Parking" />
+          <MobileNavLink href="/portal/permits" label="Permits" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/reservations" label="Active bookings" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/history" label="Parking & payments history" onClick={() => setSidebarOpen(false)} />
+
+          <SectionLabel label="Account" />
+          <MobileNavLink href="/portal/violations" label="Violations & appeals" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/vehicles" label="Vehicles" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/settings" label="Account & settings" onClick={() => setSidebarOpen(false)} />
+          <MobileNavLink href="/portal/payments" label="Payment methods" onClick={() => setSidebarOpen(false)} />
+        </nav>
+      </aside>
+
+      {/* Desktop sidebar */}
       <aside className="hidden w-64 flex-shrink-0 bg-gradient-to-b from-rose-900 via-rose-800 to-rose-700 px-4 py-6 md:block">
         <div className="mb-6">
           <img src="/logo.png" alt="CardinalSpace" className="w-full h-auto mb-2" />
@@ -133,6 +171,15 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
       <div className="flex min-h-screen flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur">
           <div className="flex items-center gap-2 text-sm text-slate-600">
+            {/* Hamburger menu button for mobile */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <span className="hidden text-xs font-medium uppercase tracking-[0.2em] text-rose-600 sm:inline">
               CARdinalSpace
             </span>
@@ -176,6 +223,18 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
+      className="flex items-center rounded-lg px-2 py-1.5 text-white hover:bg-white/10 hover:text-white transition-colors"
+    >
+      {label}
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
       className="flex items-center rounded-lg px-2 py-1.5 text-white hover:bg-white/10 hover:text-white transition-colors"
     >
       {label}
