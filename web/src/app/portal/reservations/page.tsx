@@ -12,10 +12,50 @@ const LOTS = [
 ];
 
 const SPACES = {
-  A: Array.from({ length: 24 }, (_, i) => `A-${i + 1}`),
-  B: Array.from({ length: 35 }, (_, i) => `B-${i + 1}`),
-  C: Array.from({ length: 8 }, (_, i) => `C-${i + 1}`),
-  D: Array.from({ length: 64 }, (_, i) => `D-${i + 1}`),
+  A: Array.from({ length: 24 }, (_, i) => {
+    const spaceNum = i + 1;
+    return {
+      id: `A-${spaceNum}`,
+      number: spaceNum,
+      available: spaceNum <= 8, // First 8 spaces available
+      covered: i < 12, // First half covered
+      accessible: spaceNum % 7 === 0, // Every 7th space accessible
+      hasEVCharging: spaceNum % 8 === 0, // Every 8th space has EV charging (premium lot)
+    };
+  }),
+  B: Array.from({ length: 35 }, (_, i) => {
+    const spaceNum = i + 1;
+    return {
+      id: `B-${spaceNum}`,
+      number: spaceNum,
+      available: spaceNum <= 15, // First 15 spaces available
+      covered: i < 18, // First half covered
+      accessible: spaceNum % 7 === 0, // Every 7th space accessible
+      hasEVCharging: spaceNum % 10 === 0, // Every 10th space has EV charging
+    };
+  }),
+  C: Array.from({ length: 8 }, (_, i) => {
+    const spaceNum = i + 1;
+    return {
+      id: `C-${spaceNum}`,
+      number: spaceNum,
+      available: spaceNum <= 3, // First 3 spaces available
+      covered: true, // All covered (basement)
+      accessible: spaceNum % 7 === 0, // Every 7th space accessible
+      hasEVCharging: spaceNum % 6 === 0, // Every 6th space has EV charging (high density)
+    };
+  }),
+  D: Array.from({ length: 64 }, (_, i) => {
+    const spaceNum = i + 1;
+    return {
+      id: `D-${spaceNum}`,
+      number: spaceNum,
+      available: spaceNum <= 25, // First 25 spaces available
+      covered: i < 32, // First half covered
+      accessible: spaceNum % 7 === 0, // Every 7th space accessible
+      hasEVCharging: spaceNum % 12 === 0, // Every 12th space has EV charging (budget lot)
+    };
+  }),
 };
 
 export default function PortalReservationsPage() {

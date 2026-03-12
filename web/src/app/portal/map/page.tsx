@@ -92,7 +92,18 @@ export default function PortalMapPage() {
     // Enhanced space properties for filtering
     const isCovered = col < 10; // First half is covered
     const isAccessible = spaceNum % 7 === 0; // Every 7th space is accessible
-    const hasEVCharging = spaceNum % 13 === 0; // Every 13th space has EV charging
+    
+    // More realistic EV charging distribution:
+    // - Lot A: Every 8th space (premium lot, more EV)
+    // - Lot B: Every 10th space (good EV coverage)
+    // - Lot C: Every 6th space (basement, high EV density)
+    // - Lot D: Every 12th space (budget lot, fewer EV)
+    let hasEVCharging = false;
+    if (lotKey === 'A') hasEVCharging = spaceNum % 8 === 0;
+    else if (lotKey === 'B') hasEVCharging = spaceNum % 10 === 0;
+    else if (lotKey === 'C') hasEVCharging = spaceNum % 6 === 0;
+    else if (lotKey === 'D') hasEVCharging = spaceNum % 12 === 0;
+    
     const location = getSpaceLocation(lotKey, row, col);
 
     return {
