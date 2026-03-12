@@ -20,7 +20,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
     checkAuth();
   }, []);
 
-  // Re-check auth when user navigates between pages
+  // Re-check auth when user navigates between pages or when tab becomes active
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && !loading) {
@@ -29,7 +29,25 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [loading]);
+
+  // Listen for custom user update events
+  useEffect(() => {
+    const handleUserUpdate = () => {
+      if (!loading) {
+        checkAuth();
+      }
+    };
+
+    window.addEventListener('userUpdated', handleUserUpdate);
+    
+    return () => {
+      window.removeEventListener('userUpdated', handleUserUpdate);
+    };
   }, [loading]);
 
   const checkAuth = async () => {

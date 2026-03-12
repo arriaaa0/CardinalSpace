@@ -77,6 +77,8 @@ export default function PortalSettingsPage() {
       
       if (response.ok) {
         setUser(data.user)
+        // Trigger custom event to update header name
+        window.dispatchEvent(new CustomEvent('userUpdated', { detail: data.user }));
         modal.showAlert("Success", "Profile updated successfully! Your changes are now reflected throughout the site.", "success")
       } else {
         modal.showAlert("Error", data.error || "Failed to update profile", "error")
