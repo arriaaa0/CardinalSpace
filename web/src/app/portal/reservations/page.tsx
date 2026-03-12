@@ -469,7 +469,12 @@ export default function PortalReservationsPage() {
               </p>
             </div>
             <button
-              onClick={() => setStep("book")}
+              onClick={() => {
+                // Reset selected space to force reselection
+                setSelectedSpace("");
+                // Optionally reset to list view to choose from map
+                setStep("list");
+              }}
               className="text-rose-700 font-semibold text-sm hover:text-rose-800"
             >
               Change
@@ -477,7 +482,11 @@ export default function PortalReservationsPage() {
           </div>
           <div className="bg-slate-50 rounded-lg p-3">
             <p className="text-sm font-semibold text-slate-900 mb-1">Selected Space</p>
-            <p className="text-lg font-bold text-rose-700">{selectedSpace}</p>
+            {selectedSpace ? (
+              <p className="text-lg font-bold text-rose-700">{selectedSpace}</p>
+            ) : (
+              <p className="text-sm text-slate-500 italic">No space selected</p>
+            )}
           </div>
           <div className="mt-3 text-sm text-slate-700">
             Rate: <span className="font-semibold text-rose-700">₱{selectedLotData.hourlyRate}/hour</span>
@@ -588,10 +597,10 @@ export default function PortalReservationsPage() {
 
         <button
           onClick={handleConfirmReservation}
-          disabled={loading}
+          disabled={loading || !selectedSpace}
           className="w-full rounded-full bg-rose-800 px-6 py-3 font-semibold text-white hover:bg-rose-900 disabled:opacity-50"
         >
-          {loading ? "Creating..." : "Confirm Reservation"}
+          {loading ? "Creating..." : !selectedSpace ? "Please select a space" : "Confirm Reservation"}
         </button>
         <button
           onClick={() => setStep("list")}
