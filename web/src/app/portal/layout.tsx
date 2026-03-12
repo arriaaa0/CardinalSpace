@@ -174,11 +174,13 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
             {/* Hamburger menu button for mobile */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              className="block md:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-300"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <div className="space-y-1">
+                <div className="h-0.5 w-6 bg-current"></div>
+                <div className="h-0.5 w-6 bg-current"></div>
+                <div className="h-0.5 w-6 bg-current"></div>
+              </div>
             </button>
             <span className="hidden text-xs font-medium uppercase tracking-[0.2em] text-rose-600 sm:inline">
               CARdinalSpace
