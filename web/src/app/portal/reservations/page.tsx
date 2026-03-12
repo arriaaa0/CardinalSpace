@@ -100,31 +100,7 @@ export default function PortalReservationsPage() {
     }
   };
 
-  const debugPermitValidation = async () => {
-    try {
-      const response = await fetch("/api/debug/permit-status", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          startDate: `${startDate}T${startTime}`,
-          endDate: `${endDate}T${endTime}`
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        console.log("Permit Validation Debug:", data);
-        alert(`Debug Results:\nUser: ${data.user?.email}\nTotal Permits: ${data.analysis?.totalPermits}\nApproved Permits: ${data.analysis?.approvedPermits}\nCan Reserve: ${data.analysis?.canReserve ? 'YES' : 'NO'}\n\nCheck console for full permit details.`);
-      } else {
-        alert(`Debug failed: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Debug error:", error);
-      alert("Debug error - check console");
-    }
-  };
-
+  
   
   const handleConfirmReservation = async () => {
     setLoading(true);
@@ -587,12 +563,6 @@ export default function PortalReservationsPage() {
                 You need an approved parking permit to make reservations.
               </p>
               <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={debugPermitValidation}
-                  className="inline-flex items-center gap-1.5 bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
-                >
-                  🔍 Debug Permit Issue
-                </button>
                 <a
                   href="/portal/permits"
                   className="inline-flex items-center gap-1.5 bg-yellow-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors"

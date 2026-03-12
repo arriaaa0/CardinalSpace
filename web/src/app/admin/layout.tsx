@@ -151,7 +151,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="flex items-center rounded-lg px-2 py-1.5 text-white hover:bg-white/10 hover:text-white"
+      className="flex items-center rounded-lg px-2 py-1.5 text-white hover:bg-white/10 hover:text-white transition-colors"
     >
       {label}
     </Link>
