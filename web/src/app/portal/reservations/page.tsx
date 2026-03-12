@@ -30,6 +30,8 @@ export default function PortalReservationsPage() {
   const [loading, setLoading] = useState(false);
   const [showQRCode, setShowQRCode] = useState<string | null>(null);
   const [qrData, setQrData] = useState<any>(null);
+  const [permits, setPermits] = useState<any[]>([]);
+  const [permitsLoading, setPermitsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     location: "",
@@ -38,7 +40,6 @@ export default function PortalReservationsPage() {
     evCharging: false,
     permitCompatibility: true
   });
-  const [permits, setPermits] = useState<any[]>([]);
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -90,6 +91,7 @@ export default function PortalReservationsPage() {
 
   const fetchPermits = async () => {
     try {
+      setPermitsLoading(true);
       const response = await fetch("/api/user/permits");
       if (response.ok) {
         const data = await response.json();
@@ -97,6 +99,8 @@ export default function PortalReservationsPage() {
       }
     } catch (error) {
       console.error("Failed to fetch permits:", error);
+    } finally {
+      setPermitsLoading(false);
     }
   };
 
@@ -549,7 +553,16 @@ export default function PortalReservationsPage() {
       </header>
 
       {/* Permit Check Message */}
-      {permits.length === 0 && (
+      {permitsLoading ? (
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="flex items-center justify-center">
+            <div className="animate-pulse flex items-center gap-2">
+              <div className="w-4 h-4 bg-slate-300 rounded-full"></div>
+              <span className="text-sm text-slate-600">Checking permits...</span>
+            </div>
+          </div>
+        </div>
+      ) : permits.length === 0 && (
         <div className="rounded-2xl border border-yellow-200 bg-yellow-50 p-6">
           <div className="flex items-start gap-3">
             <div className="text-yellow-600 mt-0.5">
@@ -587,7 +600,7 @@ export default function PortalReservationsPage() {
         </div>
       )}
 
-      {permits.length > 0 && permits.filter(p => p.status === "APPROVED").length === 0 && (
+      {!permitsLoading && permits.length > 0 && permits.filter(p => p.status === "APPROVED").length === 0 && (
         <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <div className="flex items-start gap-3">
             <div className="text-blue-600 mt-0.5">
