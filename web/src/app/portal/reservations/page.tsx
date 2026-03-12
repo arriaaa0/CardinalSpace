@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Modal from "@/components/ui/modal";
+import { useModal } from "@/hooks/useModal";
 
 const LOTS = [
   { id: "A", name: "Lot A - Ground Floor", available: 24, total: 100, hourlyRate: 40 },
@@ -40,6 +42,8 @@ export default function PortalReservationsPage() {
     evCharging: false,
     permitCompatibility: true
   });
+
+  const modal = useModal();
 
   const selectedLotData = LOTS.find((l) => l.id === selectedLot)!;
   
@@ -126,40 +130,45 @@ export default function PortalReservationsPage() {
       if (response.ok) {
         await fetchReservations();
         setStep("list");
-        alert("Reservation created successfully!");
+        modal.showAlert("Success", "Reservation created successfully!", "success");
       } else {
         if (data.needsPermit) {
-          alert("You need an approved permit to make reservations. Please go to the Permits page to apply for one.");
+          modal.showAlert("Permit Required", "You need an approved permit to make reservations. Please go to the Permits page to apply for one.", "alert");
         } else {
-          alert(`Failed: ${data.error || "Unknown error"}`);
+          modal.showAlert("Error", `Failed: ${data.error || "Unknown error"}`, "error");
         }
       }
     } catch (error) {
       console.error(error);
-      alert("Error creating reservation");
+      modal.showAlert("Error", "Error creating reservation", "error");
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancelReservation = async (id: string) => {
-    if (confirm("Are you sure you want to cancel this reservation? This action cannot be undone.")) {
-      try {
-        const response = await fetch(`/api/user/reservations/${id}`, {
-          method: "DELETE"
-        });
-        
-        if (response.ok) {
-          setReservations(reservations.filter((r) => r.id !== id));
-          alert("Reservation cancelled successfully!")
-        } else {
-          alert("Failed to cancel reservation")
+    modal.showConfirm(
+      "Cancel Reservation",
+      "Are you sure you want to cancel this reservation? This action cannot be undone.",
+      async () => {
+        try {
+          const response = await fetch(`/api/user/reservations/${id}`, {
+            method: "DELETE"
+          });
+          
+          if (response.ok) {
+            setReservations(reservations.filter((r) => r.id !== id));
+            modal.showAlert("Success", "Reservation cancelled successfully!", "success");
+          } else {
+            modal.showAlert("Error", "Failed to cancel reservation", "error");
+          }
+        } catch (error) {
+          console.error("Cancel reservation error:", error);
+          modal.showAlert("Error", "Failed to cancel reservation", "error");
         }
-      } catch (error) {
-        console.error("Cancel reservation error:", error)
-        alert("Failed to cancel reservation")
-      }
-    }
+      },
+      { confirmText: "Yes, Cancel", cancelText: "No, Keep" }
+    );
   };
 
   const handleShowQRCode = async (reservationId: string) => {
@@ -537,6 +546,18 @@ export default function PortalReservationsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Custom Modal */}
+      <Modal
+        isOpen={modal.modal.isOpen}
+        onClose={modal.closeModal}
+        title={modal.modal.title}
+        message={modal.modal.message}
+        type={modal.modal.type}
+        onConfirm={modal.modal.onConfirm}
+        confirmText={modal.modal.confirmText}
+        cancelText={modal.modal.cancelText}
+      />
+
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">
